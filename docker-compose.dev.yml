@@ -9,6 +9,6 @@ services:
 
   django:
     # Automatically reload Gunicorn when a file changes
-    command: gunicorn appname.wsgi -c gunicorn.cfg.py --reload
+    command: gunicorn learn_serbian.wsgi -c gunicorn.cfg.py --reload
     environment:
       - DEBUG=true

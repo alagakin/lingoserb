@@ -25,7 +25,7 @@ services:
     depends_on:
       - db
       - redis
-    command: gunicorn appname.wsgi -c gunicorn.cfg.py
+    command: gunicorn learn_serbian.wsgi -c gunicorn.cfg.py
     volumes:
       - ./_app:/usr/src/app
     networks:
