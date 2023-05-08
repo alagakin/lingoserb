@@ -1,0 +1,47 @@
+version: '3.5'
+
+services:
+  db:
+    image: postgres:15.1
+    volumes:
+      - database_volume:/var/lib/postgresql/data
+    networks:
+      - database_network
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+
+  redis:
+    image: redis:7.0.8
+    networks:
+      - redis_network
+
+  django:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - DJANGO_SECRET_KEY
+    depends_on:
+      - db
+      - redis
+    command: gunicorn appname.wsgi -c gunicorn.cfg.py
+    volumes:
+      - ./_app:/usr/src/app
+    networks:
+      - database_network
+      - redis_network
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=0
+      - DJANGO_SECRET_KEY
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+
+volumes:
+  database_volume:
+
+networks:
+  database_network:
+  redis_network:
