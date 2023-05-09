@@ -8,6 +8,9 @@ class Word(models.Model):
     title = models.CharField(max_length=255)
     part = models.CharField(max_length=32)
 
+    def __str__(self):
+        return self.title
+
 
 @receiver(pre_save, sender=Word)
 def word_pre_save(sender, instance, **kwargs):
@@ -25,3 +28,6 @@ class Translation(models.Model):
     lang = models.CharField(max_length=3, choices=LANG_CHOICES)
     word = models.ForeignKey(Word, related_name='translations',
                              on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.title
