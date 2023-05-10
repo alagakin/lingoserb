@@ -14,3 +14,11 @@ class SavedWordListSerializer(serializers.ModelSerializer):
     class Meta:
         model = SavedWord
         fields = '__all__'
+
+
+class SaveWordCreateSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
+    class Meta:
+        model = SavedWord
+        fields = '__all__'
