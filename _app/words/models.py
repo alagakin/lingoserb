@@ -40,3 +40,6 @@ class SavedWord(models.Model):
     word = models.ForeignKey(Word, on_delete=models.CASCADE)
     last_repetition = models.DateTimeField(null=True, blank=True)
     repetition_count = models.PositiveSmallIntegerField(default=0)
+
+    def __str__(self):
+        return str(self.word) + ' - ' + str(self.user)
