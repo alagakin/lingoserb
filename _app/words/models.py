@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
@@ -31,3 +32,11 @@ class Translation(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class SavedWord(models.Model):
+    user = models.ForeignKey(get_user_model(), related_name='saved',
+                             on_delete=models.CASCADE)
+    word = models.ForeignKey(Word, on_delete=models.CASCADE)
+    last_repetition = models.DateTimeField(null=True, blank=True)
+    repetition_count = models.PositiveSmallIntegerField(default=0)
