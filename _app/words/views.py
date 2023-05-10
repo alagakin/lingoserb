@@ -1,7 +1,7 @@
 from rest_framework import generics
 from words.models import SavedWord
 from rest_framework.permissions import IsAuthenticated
-from words.permissions import IsOwnerOfSaved
+from words.permissions import IsOwnerOfSaved, CanDeleteSaved
 from words.serializers import SavedWordListSerializer, SaveWordCreateSerializer
 
 
@@ -19,3 +19,10 @@ class SavedWordCreateAPIView(generics.CreateAPIView):
     permission_classes = (IsAuthenticated, )
     queryset = SavedWord.objects.all()
     serializer_class = SaveWordCreateSerializer
+
+
+class DestroySavedWordAPIView(generics.DestroyAPIView):
+    permission_classes = (CanDeleteSaved,)
+    queryset = SavedWord.objects.all()
+
+
