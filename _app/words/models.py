@@ -5,9 +5,25 @@ from django.dispatch import receiver
 from learn_serbian.utils import transliterate
 
 
+class Text(models.Model):
+    content = models.TextField()
+
+    @property
+    def words_count(self):
+        return self.words.count()
+
+    def __str__(self):
+        return self.content[0:10] + '...'
+
+
 class Word(models.Model):
     title = models.CharField(max_length=255)
     part = models.CharField(max_length=32)
+    texts = models.ManyToManyField(Text, related_name='words')
+
+    @property
+    def texts_count(self):
+        return self.texts.count()
 
     def __str__(self):
         return self.title
