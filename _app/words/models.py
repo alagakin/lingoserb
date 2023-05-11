@@ -12,8 +12,34 @@ class Text(models.Model):
     def words_count(self):
         return self.words.count()
 
+    @property
+    def translations_count(self):
+        return self.translations.count()
+
     def __str__(self):
-        return self.content[0:10] + '...'
+        return self.content[0:20] + '...'
+
+
+class TextTranslation(models.Model):
+    content = models.TextField()
+    LANG_CHOICES = [
+        ('ru', 'Russian'),
+        ('eng', 'English'),
+    ]
+    lang = models.CharField(max_length=3, choices=LANG_CHOICES)
+    text = models.ForeignKey(Text, related_name='translations',
+                             on_delete=models.CASCADE)
+
+    @property
+    def preview(self):
+        return self.content[0:20] + '...'
+
+    @property
+    def words_count(self):
+        return self.text.words_count
+
+    def __str__(self):
+        return self.preview
 
 
 class Word(models.Model):

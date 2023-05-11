@@ -1,10 +1,15 @@
 from django.contrib import admin
-from words.models import Word, Translation, SavedWord, Text
+from words.models import Word, Translation, SavedWord, Text, TextTranslation
 
 
 class TranslationInlineAdmin(admin.TabularInline):
     model = Translation
     extra = 3
+
+
+class TextTranslationInlineAdmin(admin.TabularInline):
+    model = TextTranslation
+    extra = 2
 
 
 class WordAdmin(admin.ModelAdmin):
@@ -21,11 +26,17 @@ class SavedWordAdmin(admin.ModelAdmin):
 
 
 class TextAdmin(admin.ModelAdmin):
-    list_display = ['content', 'words_count']
+    list_display = ['content', 'words_count', 'translations_count']
     readonly_fields = ['words_count']
+    inlines = [TextTranslationInlineAdmin]
+
+
+class TextTranslationAdmin(admin.ModelAdmin):
+    list_display = ['id', 'preview', 'text', 'lang', 'words_count']
 
 
 admin.site.register(Word, WordAdmin)
 admin.site.register(Translation, TranslationAdmin)
 admin.site.register(SavedWord, SavedWordAdmin)
 admin.site.register(Text, TextAdmin)
+admin.site.register(TextTranslation, TextTranslationAdmin)
