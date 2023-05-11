@@ -42,10 +42,25 @@ class TextTranslation(models.Model):
         return self.preview
 
 
+class Category(models.Model):
+    title = models.CharField(max_length=255)
+
+    class Meta:
+        verbose_name_plural = "categories"
+
+    @property
+    def words_count(self):
+        return self.words.count()
+
+    def __str__(self):
+        return self.title
+
+
 class Word(models.Model):
     title = models.CharField(max_length=255)
     part = models.CharField(max_length=32)
     texts = models.ManyToManyField(Text, related_name='words')
+    categories = models.ManyToManyField(Category, related_name='words')
 
     @property
     def texts_count(self):
