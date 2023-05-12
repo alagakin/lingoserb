@@ -71,7 +71,7 @@ class TextSerializer(serializers.Serializer):
         # todo lang
         try:
             translation = TextTranslation.objects.get(text=instance,
-                                              lang='ru').content
+                                                      lang='ru').content
         except TextTranslation.DoesNotExist:
             translation = None
 
@@ -86,3 +86,33 @@ class TextsOfWithWordSerializer(serializers.ModelSerializer):
     class Meta:
         model = Word
         fields = ['title', 'texts']
+
+
+class TranslationsForWordSerializer(serializers.Serializer):
+    title = serializers.CharField()
+    lang = serializers.CharField()
+
+
+class CategoriesForWordSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    title = serializers.CharField()
+
+
+class WordTranslationSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    title = serializers.CharField()
+    categories = serializers.CharField()
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        # todo lang
+        translations = instance.translations.filter(lang='ru')
+        categories = instance.categories.all()
+        serialized_translations = TranslationsForWordSerializer(translations,
+                                                                many=True)
+        serialized_categories = CategoriesForWordSerializer(categories,
+                                                            many=True)
+        representation['translation'] = serialized_translations.data
+        representation['categories'] = serialized_categories.data
+
+        return representation
