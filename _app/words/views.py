@@ -78,3 +78,9 @@ class WordDetailAPIView(APIView):
 
         serialized = WordTranslationSerializer(word)
         return Response(serialized.data, status=status.HTTP_200_OK)
+
+
+class WordsListAPIView(generics.ListAPIView):
+    serializer_class = WordTranslationSerializer
+    queryset = Word.objects.all()
+    permission_classes = (IsAuthenticated, )
