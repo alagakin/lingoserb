@@ -24,9 +24,9 @@ class TextTranslation(models.Model):
     content = models.TextField()
     LANG_CHOICES = [
         ('ru', 'Russian'),
-        ('eng', 'English'),
+        ('en', 'English'),
     ]
-    lang = models.CharField(max_length=3, choices=LANG_CHOICES)
+    lang = models.CharField(max_length=3, choices=LANG_CHOICES, null=False)
     text = models.ForeignKey(Text, related_name='translations',
                              on_delete=models.CASCADE)
 
@@ -81,7 +81,7 @@ class Translation(models.Model):
     title = models.CharField(max_length=255)
     LANG_CHOICES = [
         ('ru', 'Russian'),
-        ('eng', 'English'),
+        ('en', 'English'),
     ]
     lang = models.CharField(max_length=3, choices=LANG_CHOICES)
     word = models.ForeignKey(Word, related_name='translations',
