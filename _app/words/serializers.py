@@ -1,6 +1,6 @@
 import random
 from rest_framework import serializers
-from words.models import SavedWord, Word, Translation
+from words.models import SavedWord, Word, Translation, Text, TextTranslation
 
 
 class WordSerializer(serializers.ModelSerializer):
@@ -60,3 +60,29 @@ class WordsGameSerializer(serializers.Serializer):
         representation['options'] = options.data
 
         return representation
+
+
+class TextSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    content = serializers.CharField()
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        # todo lang
+        try:
+            translation = TextTranslation.objects.get(text=instance,
+                                              lang='ru').content
+        except TextTranslation.DoesNotExist:
+            translation = None
+
+        representation['translation'] = translation
+        return representation
+
+
+class TextsOfWithWordSerializer(serializers.ModelSerializer):
+    title = serializers.CharField()
+    texts = TextSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Word
+        fields = ['title', 'texts']
