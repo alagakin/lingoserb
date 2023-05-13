@@ -32,7 +32,7 @@ services:
       - database_network
       - redis_network
     ports:
-      - "8000:8000"
+      - "80:8000"
     environment:
       - PYTHONUNBUFFERED=0
       - DJANGO_SECRET_KEY
