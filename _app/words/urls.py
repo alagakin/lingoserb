@@ -15,8 +15,9 @@ urlpatterns = [
     path('game/', GetGameAPIView.as_view(), name='get-game'),
     path('game/<int:pk>/success/', SuccessRepetitionAPIView.as_view(),
          name='success-repetition'),
-    path('text/for-word/<int:pk>/', TextForWordAPIView.as_view()),
-    path('word/<int:pk>/', WordDetailAPIView.as_view()),
-    path('words/', WordsListAPIView.as_view()),
-
+    path('words/', WordsListAPIView.as_view(), name='word-list'),
+    path('word/<int:pk>/', WordDetailAPIView.as_view(),
+         name='word-detail'),
+    path('text/for-word/<int:pk>/', TextForWordAPIView.as_view(),
+         name='text-for-word'),
 ]
