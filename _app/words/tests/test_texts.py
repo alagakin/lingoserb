@@ -3,12 +3,9 @@ from django.test import TestCase
 from django.urls import resolve, reverse
 from rest_framework import status
 from rest_framework.authtoken.models import Token
-from words.models import Word, Category, SavedWord, Translation
-from words.views import SavedWordListAPIView, SavedWordCreateAPIView, \
-    DestroySavedWordAPIView, SuccessRepetitionAPIView, GetGameAPIView, \
-    WordsListAPIView, WordDetailAPIView, TextForWordAPIView
+from words.models import Word, Text
+from words.views import WordsListAPIView, WordDetailAPIView, TextForWordAPIView
 from rest_framework.test import APITestCase
-import json
 
 
 class TestEndpointsResoled(TestCase):
@@ -25,5 +22,39 @@ class TestEndpointsResoled(TestCase):
         self.assertEqual(resolve(url).func.view_class, TextForWordAPIView)
 
 
-class TestGameActions(APITestCase):
-    pass
+class TestWordsAPIViews(APITestCase):
+    def setUp(self) -> None:
+        self.user_1 = get_user_model().objects.create(
+            username='user 1',
+            password='123'
+        )
+        self.token_user_1 = Token.objects.create(user=self.user_1)
+        self.client.credentials(
+            HTTP_AUTHORIZATION=f'Token {self.token_user_1.key}')
+
+        self.word_1 = Word.objects.create(
+            title='Test word',
+        )
+
+        self.text_word_1 = Text.objects.create(
+            content='Text for Test word'
+        )
+        self.word_1.texts.add(self.text_word_1)
+
+    def test_user_can_get_words_list(self):
+        response = self.client.get(reverse('word-list'))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, 'Test word')
+
+    def test_user_can_get_word_detail_info(self):
+        response = self.client.get(
+            reverse('word-detail', kwargs={'pk': self.word_1.pk}))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, 'Test word')
+
+    def test_user_can_get_texts_for_word(self):
+        response = self.client.get(
+            reverse('text-for-word', kwargs={'pk': self.word_1.pk}))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, 'Test word')
+        self.assertContains(response, 'Text for Test word')
