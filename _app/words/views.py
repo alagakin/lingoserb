@@ -2,20 +2,20 @@ from django.utils import timezone
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from words.models import SavedWord, Word, Translation
+from words.models import SavedWord, Word
 from rest_framework.permissions import IsAuthenticated
-from words.permissions import IsOwnerOfSaved, UserOwsSavedWord
+from words.permissions import UserOwsSavedWord
 from words.serializers import SavedWordListSerializer, SaveWordCreateSerializer, \
-    WordsGameSerializer, TextSerializer, TextsOfWithWordSerializer, \
+    WordsGameSerializer, TextsOfWithWordSerializer, \
     WordTranslationSerializer
 
 
 class SavedWordListAPIView(generics.ListAPIView):
     serializer_class = SavedWordListSerializer
-    permission_classes = (IsOwnerOfSaved,)
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        user_id = self.kwargs['user_id']
+        user_id = self.request.user.id
         queryset = SavedWord.objects.filter(user_id=user_id)
         return queryset
 
