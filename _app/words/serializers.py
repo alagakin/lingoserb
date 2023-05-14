@@ -116,3 +116,7 @@ class WordTranslationSerializer(serializers.Serializer):
         representation['categories'] = serialized_categories.data
 
         return representation
+
+
+class SavedWordsIds(serializers.Serializer):
+    id = serializers.IntegerField(source='word.id')

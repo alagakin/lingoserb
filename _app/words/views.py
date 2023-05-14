@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from words.permissions import UserOwsSavedWord
 from words.serializers import SavedWordListSerializer, SaveWordCreateSerializer, \
     WordsGameSerializer, TextsOfWithWordSerializer, \
-    WordTranslationSerializer
+    WordTranslationSerializer, SavedWordsIds
 
 
 class SavedWordListAPIView(generics.ListAPIView):
@@ -84,3 +84,12 @@ class WordsListAPIView(generics.ListAPIView):
     serializer_class = WordTranslationSerializer
     queryset = Word.objects.all()
     permission_classes = (IsAuthenticated, )
+
+
+class SavedWordsIDSAPIView(APIView):
+    permission_classes = (IsAuthenticated, )
+
+    def get(self, request, *args, **kwargs):
+        saved_words = SavedWord.objects.filter(user=request.user.id)
+        serialized = SavedWordsIds(saved_words, many=True)
+        return Response(serialized.data, status=status.HTTP_200_OK)

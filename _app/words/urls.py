@@ -2,11 +2,13 @@ from django.urls import path
 
 from words.views import SavedWordListAPIView, SavedWordCreateAPIView, \
     DestroySavedWordAPIView, GetGameAPIView, SuccessRepetitionAPIView, \
-    TextForWordAPIView, WordDetailAPIView, WordsListAPIView
+    TextForWordAPIView, WordDetailAPIView, WordsListAPIView, \
+    SavedWordsIDSAPIView
 
 urlpatterns = [
     path('saved/', SavedWordListAPIView.as_view(),
          name='saved-word-list'),
+    path('saved/ids/', SavedWordsIDSAPIView.as_view(), name='saved-words-ids'),
     path('saved/add/', SavedWordCreateAPIView.as_view(),
          name='saved-word-create'),
     path('saved/word/<int:pk>/',
