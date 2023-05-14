@@ -26,9 +26,18 @@ class SavedWordCreateAPIView(generics.CreateAPIView):
     serializer_class = SaveWordCreateSerializer
 
 
-class DestroySavedWordAPIView(generics.DestroyAPIView):
-    permission_classes = (UserOwsSavedWord,)
-    queryset = SavedWord.objects.all()
+class DestroySavedWordAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def delete(self, request, *args, **kwargs):
+        # todo filters
+        try:
+            saved_word = SavedWord.objects.get(user_id=request.user.id, word_id=kwargs['pk'])
+            saved_word.delete()
+        except SavedWord.DoesNotExist:
+            return Response('not found', status=status.HTTP_204_NO_CONTENT)
+
+        return Response(None, status=status.HTTP_204_NO_CONTENT)
 
 
 class GetGameAPIView(APIView):
@@ -83,11 +92,11 @@ class WordDetailAPIView(APIView):
 class WordsListAPIView(generics.ListAPIView):
     serializer_class = WordTranslationSerializer
     queryset = Word.objects.all()
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated,)
 
 
 class SavedWordsIDSAPIView(APIView):
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
         saved_words = SavedWord.objects.filter(user=request.user.id)

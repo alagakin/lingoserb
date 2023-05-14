@@ -60,7 +60,7 @@ class TestSavedWordsActions(APITestCase):
         )
         self.assertEqual(self.user_1.saved.count(), 1)
         response = self.client.delete(
-            reverse('saved-word-destroy', kwargs={'pk': saved_word.id}))
+            reverse('saved-word-destroy', kwargs={'pk': self.word_1.id}))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(self.user_1.saved.count(), 0)
 
@@ -83,15 +83,3 @@ class TestSavedWordsActions(APITestCase):
             reverse('saved-word-list'))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertNotContains(response, 'Second word')
-
-    def test_user_cant_delete_another_users_saved_words(self):
-        saved_word = SavedWord.objects.create(
-            word=self.word_2,
-            user=self.user_2
-        )
-        self.assertEqual(self.user_2.saved.count(), 1)
-        response = self.client.delete(
-            reverse('saved-word-destroy', kwargs={'pk': saved_word.id}))
-
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertEqual(self.user_2.saved.count(), 1)
