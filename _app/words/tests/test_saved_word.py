@@ -19,7 +19,7 @@ class TestEndpointsResoled(TestCase):
         self.assertEqual(resolve(url).func.view_class, SavedWordCreateAPIView)
 
     def test_saved_word_destroy_resolved(self):
-        url = reverse('saved-word-destroy', kwargs={'pk': 1})
+        url = reverse('saved-word-destroy')
         self.assertEqual(resolve(url).func.view_class, DestroySavedWordAPIView)
 
 
@@ -60,7 +60,7 @@ class TestSavedWordsActions(APITestCase):
         )
         self.assertEqual(self.user_1.saved.count(), 1)
         response = self.client.delete(
-            reverse('saved-word-destroy', kwargs={'pk': self.word_1.id}))
+            reverse('saved-word-destroy'), {'word': self.word_1.id})
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(self.user_1.saved.count(), 0)
 

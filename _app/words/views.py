@@ -30,12 +30,13 @@ class DestroySavedWordAPIView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def delete(self, request, *args, **kwargs):
-        # todo filters
+        # todo use serializers
         try:
-            saved_word = SavedWord.objects.get(user_id=request.user.id, word_id=kwargs['pk'])
+            saved_word = SavedWord.objects.get(user_id=request.user.id,
+                                               word_id=request.data.get('word'))
             saved_word.delete()
         except SavedWord.DoesNotExist:
-            return Response('not found', status=status.HTTP_204_NO_CONTENT)
+            return Response('not found', status=status.HTTP_404_NOT_FOUND)
 
         return Response(None, status=status.HTTP_204_NO_CONTENT)
 

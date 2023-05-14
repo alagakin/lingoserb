@@ -11,7 +11,7 @@ urlpatterns = [
     path('saved/ids/', SavedWordsIDSAPIView.as_view(), name='saved-words-ids'),
     path('saved/add/', SavedWordCreateAPIView.as_view(),
          name='saved-word-create'),
-    path('saved/word/<int:pk>/',
+    path('saved/delete/',
          DestroySavedWordAPIView.as_view(),
          name='saved-word-destroy'),
     path('game/', GetGameAPIView.as_view(), name='get-game'),
