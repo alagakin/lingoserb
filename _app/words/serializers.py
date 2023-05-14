@@ -50,10 +50,11 @@ class WordsGameSerializer(serializers.Serializer):
             obj.correct = False
 
         correct_translation = Translation.objects.filter(lang='ru').filter(
-            word__id=instance.word.id)
+            word__id=instance.word.id).first()
         correct_translation.correct = True
 
-        options = list(incorrect_translations) + list(correct_translation)
+        options = list(incorrect_translations)
+        options.append(correct_translation)
         random.shuffle(options)
         options = WordGameOptionsSerializer(options, many=True)
 
