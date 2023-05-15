@@ -9,14 +9,6 @@ class WordSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class SavedWordListSerializer(serializers.ModelSerializer):
-    word = WordSerializer(read_only=True)
-
-    class Meta:
-        model = SavedWord
-        fields = '__all__'
-
-
 class SaveWordCreateSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
@@ -121,3 +113,11 @@ class WordTranslationSerializer(serializers.Serializer):
 
 class SavedWordsIds(serializers.Serializer):
     id = serializers.IntegerField(source='word.id')
+
+
+class SavedWordListSerializer(serializers.ModelSerializer):
+    word = WordTranslationSerializer(read_only=True)
+
+    class Meta:
+        model = SavedWord
+        fields = '__all__'
