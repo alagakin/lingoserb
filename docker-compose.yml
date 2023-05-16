@@ -38,6 +38,8 @@ services:
       - DJANGO_SECRET_KEY
       - POSTGRES_USER
       - POSTGRES_PASSWORD
+      - MEDIA_ROOT
+      - MEDIA_URL
 
 volumes:
   database_volume:

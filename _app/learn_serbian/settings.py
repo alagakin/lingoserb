@@ -189,3 +189,6 @@ CORS_ALLOW_HEADERS = [
     'Content-Type',
     'Authorization',
 ]
+
+MEDIA_ROOT = os.getenv('MEDIA_ROOT')
+MEDIA_URL = os.getenv('MEDIA_URL')

@@ -2,6 +2,8 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
+
+from learn_serbian import settings
 from learn_serbian.utils import transliterate
 
 
@@ -78,7 +80,7 @@ class Category(models.Model):
     title = models.CharField(max_length=255)
     # todo lang?
     description = models.TextField(blank=True, null=True)
-    picture = models.ImageField(upload_to='pictures/', null=True, blank=True)
+    picture = models.ImageField(upload_to=settings.MEDIA_ROOT, null=True, blank=True)
     words = models.ManyToManyField(Word, related_name='categories')
     texts = models.ManyToManyField(Text, related_name='categories')
 

@@ -6,3 +6,4 @@ _psql
 # Uncomment this next line after cloning and remove .env from the repo after cloning
 # *.env
 _app/static/
+_app/media/
