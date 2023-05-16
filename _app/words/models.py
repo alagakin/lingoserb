@@ -49,10 +49,15 @@ class TextTranslation(models.Model):
         return self.preview
 
 
+class Tag(models.Model):
+    title = models.CharField(max_length=255)
+
+
 class Word(models.Model):
     title = models.CharField(max_length=255)
     part = models.CharField(max_length=32)
     texts = models.ManyToManyField(Text, related_name='words')
+    tags = models.ManyToManyField(Tag, related_name='words')
 
     @property
     def texts_count(self):
@@ -86,6 +91,9 @@ class Category(models.Model):
 
     def __str__(self):
         return self.title
+
+
+
 
 
 class Translation(models.Model):
