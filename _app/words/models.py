@@ -20,6 +20,13 @@ class Text(models.Model):
         return self.content[0:20] + '...'
 
 
+@receiver(pre_save, sender=Text)
+def word_pre_save(sender, instance, **kwargs):
+    instance.content = transliterate(instance.content)
+
+    return instance
+
+
 class TextTranslation(models.Model):
     content = models.TextField()
     LANG_CHOICES = [
