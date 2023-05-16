@@ -95,6 +95,7 @@ class WordTranslationSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     title = serializers.CharField()
     categories = serializers.CharField()
+    texts_count = serializers.IntegerField(source='texts.count')
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
