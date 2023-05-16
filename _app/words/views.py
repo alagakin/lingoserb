@@ -8,6 +8,7 @@ from words.permissions import UserOwsSavedWord
 from words.serializers import SavedWordListSerializer, SaveWordCreateSerializer, \
     WordsGameSerializer, TextsOfWithWordSerializer, \
     WordTranslationSerializer, SavedWordsIds
+from words.services.games import CardsGame
 
 
 class SavedWordListAPIView(generics.ListAPIView):
@@ -45,8 +46,8 @@ class GetGameAPIView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
-        # todo filters
-        saved_words = SavedWord.objects.filter(user_id=request.user.id)[:10]
+        game = CardsGame(request.user.id)
+        saved_words = game.get_saved_words()
 
         serialized = WordsGameSerializer(saved_words, many=True)
         return Response(serialized.data, status=status.HTTP_200_OK)
