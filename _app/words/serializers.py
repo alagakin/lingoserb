@@ -1,6 +1,7 @@
 import random
 from rest_framework import serializers
-from words.models import SavedWord, Word, Translation, Text, TextTranslation
+from words.models import SavedWord, Word, Translation, Text, TextTranslation, \
+    Category
 
 
 class WordSerializer(serializers.ModelSerializer):
@@ -122,3 +123,17 @@ class SavedWordListSerializer(serializers.ModelSerializer):
     class Meta:
         model = SavedWord
         fields = '__all__'
+
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = '__all__'
+
+
+class CategoryWordsSerializer(serializers.Serializer):
+    words = WordTranslationSerializer(many=True)
+
+
+class CategoryTextsSerializer(serializers.Serializer):
+    texts = TextSerializer(many=True)

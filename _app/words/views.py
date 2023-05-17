@@ -3,12 +3,13 @@ from django.utils import timezone
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from words.models import SavedWord, Word
+from words.models import SavedWord, Word, Category
 from rest_framework.permissions import IsAuthenticated
 from words.permissions import UserOwsSavedWord
 from words.serializers import SavedWordListSerializer, SaveWordCreateSerializer, \
     WordsGameSerializer, TextsOfWithWordSerializer, \
-    WordTranslationSerializer, SavedWordsIds
+    WordTranslationSerializer, SavedWordsIds, CategorySerializer, \
+    CategoryWordsSerializer, CategoryTextsSerializer
 from words.services.games import CardsGame
 
 
@@ -128,3 +129,27 @@ class SavedWordsIDSAPIView(APIView):
         saved_words = SavedWord.objects.filter(user=request.user.id)
         serialized = SavedWordsIds(saved_words, many=True)
         return Response(serialized.data, status=status.HTTP_200_OK)
+
+
+class CategoriesListAPIView(generics.ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+
+class RetrieveCategoriesAPIView(generics.RetrieveAPIView):
+    permission_classes = (IsAuthenticated,)
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+
+class CategoryWordsAPIView(generics.RetrieveAPIView):
+    permission_classes = (IsAuthenticated,)
+    queryset = Category.objects.all()
+    serializer_class = CategoryWordsSerializer
+
+
+class CategoryTextsAPIView(generics.RetrieveAPIView):
+    permission_classes = (IsAuthenticated,)
+    queryset = Category.objects.all()
+    serializer_class = CategoryTextsSerializer
