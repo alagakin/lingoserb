@@ -153,3 +153,30 @@ class CategoryTextsAPIView(generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = Category.objects.all()
     serializer_class = CategoryTextsSerializer
+
+
+class SaveWordsFromCategoryAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+        try:
+            category = Category.objects.get(pk=kwargs['pk'])
+            saved_words = [saved_word.word for saved_word in
+                           SavedWord.objects.filter(user=request.user)]
+
+            category_words = Word.objects.filter(categories=category)
+
+            for word in category_words:
+                if word not in saved_words:
+                    try:
+                        SavedWord.objects.create(user=request.user, word=word)
+                    except IntegrityError:
+                        existing_saved_word = SavedWord.all_objects.get(
+                            user=request.user, word=word)
+                        existing_saved_word.deleted = False
+                        existing_saved_word.save(update_fields=['deleted'])
+
+            return Response(None, status=status.HTTP_201_CREATED)
+
+        except Category.DoesNotExist:
+            return Response(None, status=status.HTTP_404_NOT_FOUND)
