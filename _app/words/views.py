@@ -1,3 +1,4 @@
+from django.db import IntegrityError
 from django.utils import timezone
 from rest_framework import generics, status
 from rest_framework.response import Response
@@ -21,10 +22,33 @@ class SavedWordListAPIView(generics.ListAPIView):
         return queryset
 
 
-class SavedWordCreateAPIView(generics.CreateAPIView):
+class SavedWordCreateAPIView(APIView):
     permission_classes = (IsAuthenticated,)
     queryset = SavedWord.objects.all()
     serializer_class = SaveWordCreateSerializer
+
+    def post(self, request, *args, **kwargs):
+        if 'word' not in request.data:
+            return Response('word is required',
+                            status=status.HTTP_400_BAD_REQUEST)
+        try:
+            saved_word = SavedWord(
+                user=request.user,
+                word_id=request.data['word']
+            )
+            saved_word.save()
+            return Response(None,
+                            status=status.HTTP_201_CREATED)
+        except IntegrityError:
+            saved_word = SavedWord.all_objects.get(user=request.user,
+                                                   word_id=request.data['word'])
+            saved_word.deleted = False
+            saved_word.save(update_fields=['deleted'])
+            return Response(None,
+                            status=status.HTTP_201_CREATED)
+        except Exception:
+            return Response(None,
+                            status=status.HTTP_400_BAD_REQUEST)
 
 
 class DestroySavedWordAPIView(APIView):

@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
@@ -95,9 +96,6 @@ class Category(models.Model):
         return self.title
 
 
-
-
-
 class Translation(models.Model):
     title = models.CharField(max_length=255)
     LANG_CHOICES = [
@@ -112,15 +110,33 @@ class Translation(models.Model):
         return self.title
 
 
+class SavedWordsManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(deleted=False)
+
+
+class SavedWordsManagerAll(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset()
+
+
 class SavedWord(models.Model):
     user = models.ForeignKey(get_user_model(), related_name='saved',
                              on_delete=models.CASCADE)
     word = models.ForeignKey(Word, on_delete=models.CASCADE)
     last_repetition = models.DateTimeField(null=True, blank=True)
     repetition_count = models.PositiveSmallIntegerField(default=0)
+    deleted = models.BooleanField(default=False)
+
+    def delete(self, *args, **kwargs):
+        self.deleted = True
+        self.save(update_fields=['deleted'])
 
     def __str__(self):
         return str(self.word) + ' - ' + str(self.user)
 
     class Meta:
         unique_together = ['user', 'word']
+
+    objects = SavedWordsManager()
+    all_objects = SavedWordsManagerAll()
