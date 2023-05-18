@@ -40,6 +40,7 @@ services:
       - POSTGRES_PASSWORD
       - MEDIA_ROOT
       - MEDIA_URL
+      - OPENAI_KEY
 
 volumes:
   database_volume:

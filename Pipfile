@@ -18,6 +18,7 @@ djoser = "*"
 djangorestframework-simplejwt = "*"
 drf_yasg = "*"
 pillow = "*"
+openai = "*"
 
 [dev-packages]
 black = "*"
