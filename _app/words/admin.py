@@ -27,13 +27,24 @@ class SavedWordAdmin(admin.ModelAdmin):
 
 
 class TextAdmin(admin.ModelAdmin):
-    list_display = ['content', 'words_count', 'translations_count']
-    readonly_fields = ['words_count']
+    list_display = ['content', 'words_count', 'translations_count', 'get_words']
+    readonly_fields = ['words_count', 'get_words']
+
+    def get_words(self, obj):
+        return ", ".join(obj.words.values_list('title', flat=True))
+
+    get_words.short_description = 'Words'
+
     inlines = [TextTranslationInlineAdmin]
 
 
 class TextTranslationAdmin(admin.ModelAdmin):
-    list_display = ['id', 'preview', 'text', 'lang', 'words_count']
+    list_display = ['id', 'preview', 'text', 'lang', 'words_count', 'get_words']
+    readonly_fields = ['words_count', 'get_words']
+
+    def get_words(self, obj):
+        return ", ".join(obj.text.words.values_list('title', flat=True))
+    get_words.short_description = 'Words'
 
 
 class CategoryAdmin(admin.ModelAdmin):
