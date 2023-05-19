@@ -205,24 +205,32 @@ LOGGING = {
         },
     },
     "handlers": {
+        'std_err': {
+            'class': 'logging.StreamHandler'
+        },
         "file": {
             "level": "INFO",
             "class": "logging.FileHandler",
-            'filename': os.path.join(BASE_DIR,'log.log'),
+            'filename': os.path.join(BASE_DIR, 'log/log.log'),
             "formatter": "verbose",
         },
-        "openai": {
-            "level": "DEBUG",
+        "openai_report": {
+            "level": "INFO",
             "class": "logging.FileHandler",
-            'filename': os.path.join(BASE_DIR, 'openai.log'),
+            'filename': os.path.join(BASE_DIR, 'log/openai_info.log'),
+            "formatter": "verbose",
+        },
+        "openai_error": {
+            "level": "ERROR",
+            "class": "logging.FileHandler",
+            'filename': os.path.join(BASE_DIR, 'log/openai_error.log'),
             "formatter": "verbose",
         },
     },
     "loggers": {
         'openai': {
-            'handlers': ['openai'],
-            'level': 'WARNING',
-            'propagate': False,
+            'handlers': ['openai_error', 'openai_report'],
+            'level': 1,
         },
         '': {
             'handlers': ['file'],
