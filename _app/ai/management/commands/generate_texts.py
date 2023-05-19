@@ -27,7 +27,8 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         openai.api_key = os.getenv('OPENAI_KEY')
 
-        words = Word.objects.order_by('texts')[0:5]
+        words = Word.objects.order_by('-texts')
+
         titles = ['"' + word.title + '"' for word in words]
         titles = ", ".join(titles)
         prompt = self.prompt % titles
