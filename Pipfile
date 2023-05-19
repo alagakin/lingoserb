@@ -19,6 +19,7 @@ djangorestframework-simplejwt = "*"
 drf_yasg = "*"
 pillow = "*"
 openai = "*"
+loguru = "*"
 
 [dev-packages]
 black = "*"

@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
-
+import sys
 from pathlib import Path
 import os
 
@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     'djoser',
     'accounts',
     'words',
-    'import'
+    'import',
+    'ai'
 ]
 
 MIDDLEWARE = [
@@ -192,3 +193,41 @@ CORS_ALLOW_HEADERS = [
 
 MEDIA_ROOT = os.getenv('MEDIA_ROOT')
 MEDIA_URL = os.getenv('MEDIA_URL')
+
+# todo make another logger fo api
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "{levelname} {asctime} {module} {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "file": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            'filename': os.path.join(BASE_DIR,'log.log'),
+            "formatter": "verbose",
+        },
+        "openai": {
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            'filename': os.path.join(BASE_DIR, 'openai.log'),
+            "formatter": "verbose",
+        },
+    },
+    "loggers": {
+        'openai': {
+            'handlers': ['openai'],
+            'level': 'WARNING',
+            'propagate': False,
+        },
+        '': {
+            'handlers': ['file'],
+            'level': 'WARNING',
+            'propagate': True,
+        },
+    },
+}
