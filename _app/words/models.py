@@ -81,9 +81,12 @@ class Category(models.Model):
     title = models.CharField(max_length=255)
     # todo lang?
     description = models.TextField(blank=True, null=True)
-    picture = models.ImageField(upload_to=settings.MEDIA_ROOT, null=True, blank=True)
-    words = models.ManyToManyField(Word, related_name='categories')
-    texts = models.ManyToManyField(Text, related_name='categories')
+    picture = models.ImageField(upload_to=settings.MEDIA_ROOT, null=True,
+                                blank=True)
+    words = models.ManyToManyField(Word, related_name='categories',
+                                   blank=True)
+    texts = models.ManyToManyField(Text, related_name='categories',
+                                   blank=True)
 
     class Meta:
         verbose_name_plural = "categories"
