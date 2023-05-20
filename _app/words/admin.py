@@ -48,7 +48,7 @@ class TextTranslationAdmin(admin.ModelAdmin):
 
 
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ['id', 'words_count', 'title']
+    list_display = ['id', 'words_count', 'title', 'picture']
     readonly_fields = ['get_words']
 
     def get_words(self, obj):
