@@ -4,7 +4,8 @@ from words.views import SavedWordListAPIView, SavedWordCreateAPIView, \
     DestroySavedWordAPIView, GetGameAPIView, SuccessRepetitionAPIView, \
     TextForWordAPIView, WordDetailAPIView, WordsListAPIView, \
     SavedWordsIDSAPIView, CategoriesListAPIView, RetrieveCategoriesAPIView, \
-    CategoryWordsAPIView, CategoryTextsAPIView, SaveWordsFromCategoryAPIView
+    CategoryWordsAPIView, CategoryTextsAPIView, SaveWordsFromCategoryAPIView, \
+    ProgressAPIView
 
 urlpatterns = [
     path('saved/', SavedWordListAPIView.as_view(),
@@ -35,6 +36,9 @@ urlpatterns = [
          name='category-texts-view'),
     path('saved/from-category/<int:pk>/',
          SaveWordsFromCategoryAPIView.as_view(),
-         name='add-to-saved-from-category')
+         name='add-to-saved-from-category'),
+    path('saved/progress/',
+         ProgressAPIView.as_view(),
+         name='saved-progress'),
 
 ]

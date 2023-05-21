@@ -9,8 +9,9 @@ from words.permissions import UserOwsSavedWord
 from words.serializers import SavedWordListSerializer, SaveWordCreateSerializer, \
     WordsGameSerializer, TextsOfWithWordSerializer, \
     WordTranslationSerializer, SavedWordsIds, CategorySerializer, \
-    CategoryWordsSerializer, CategoryTextsSerializer
+    CategoryWordsSerializer, CategoryTextsSerializer, ProgressSerializer
 from words.services.games import CardsGame
+from django.core.cache import cache
 
 
 class SavedWordListAPIView(generics.ListAPIView):
@@ -180,3 +181,18 @@ class SaveWordsFromCategoryAPIView(APIView):
 
         except Category.DoesNotExist:
             return Response(None, status=status.HTTP_404_NOT_FOUND)
+
+
+class ProgressAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, *args, **kwargs):
+        cache_key = 'progress-' + str(request.user.id)
+        data = cache.get(cache_key)
+        if data is None:
+            progress = SavedWord.objects.all()
+            serialized = ProgressSerializer(progress, many=True)
+            data = serialized.data
+            cache.set(cache_key, data, 60)
+
+        return Response(data, status=status.HTTP_200_OK)

@@ -137,3 +137,15 @@ class CategoryWordsSerializer(serializers.Serializer):
 
 class CategoryTextsSerializer(serializers.Serializer):
     texts = TextSerializer(many=True)
+
+
+class ProgressSerializer(serializers.Serializer):
+    id = serializers.SerializerMethodField()
+    cnt = serializers.SerializerMethodField()
+
+    def get_id(self, instance):
+        return instance.word.id
+
+    def get_cnt(self, instance):
+        return instance.repetition_count
+
