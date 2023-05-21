@@ -128,7 +128,7 @@ class SavedWordListSerializer(serializers.ModelSerializer):
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ('id', 'title', 'description', 'picture', )
+        fields = ('id', 'title', 'description', 'picture', 'words_count')
 
 
 class CategoryWordsSerializer(serializers.Serializer):
