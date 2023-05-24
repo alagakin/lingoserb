@@ -3,7 +3,8 @@ from topics.models import Topic
 
 
 class TopicAdmin(admin.ModelAdmin):
-    list_display = ['id', 'words_count', 'title', 'picture', 'parent']
+    list_display = ['id', 'words_count', 'title', 'picture', 'get_translations',
+                    'parent']
     readonly_fields = ['get_words', 'get_translations']
 
     def get_translations(self, obj):

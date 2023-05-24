@@ -1,0 +1,53 @@
+[
+  {
+    "title": "Hrana",
+    "title_ru": "Пища",
+    "title_en": "Food",
+    "subtopics": [
+      {
+        "title": "Voće",
+        "title_ru": "Фрукты",
+        "title_en": "Fruits"
+      },
+      {
+        "title": "Povrće",
+        "title_ru": "Овощи",
+        "title_en": "Vegetables"
+      }
+    ]
+  },
+  {
+    "title": "Zdravlje",
+    "title_ru": "Здоровье",
+    "title_en": "Health",
+    "subtopics": [
+      {
+        "title": "Zdravlje",
+        "title_ru": "Здоровье",
+        "title_en": "Health"
+      },
+      {
+        "title": "Telo",
+        "title_ru": "Тело",
+        "title_en": "Body"
+      },
+      {
+        "title": "Delovi tela",
+        "title_ru": "Части тела",
+        "title_en": "Body Parts"
+      }
+    ]
+  },
+  {
+    "title": "Grad",
+    "title_ru": "Город",
+    "title_en": "City",
+    "subtopics": [
+      {
+        "title": "Kupovina",
+        "title_ru": "Покупки",
+        "title_en": "Shopping"
+      }
+    ]
+  }
+]
