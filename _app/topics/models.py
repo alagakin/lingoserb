@@ -13,6 +13,10 @@ class Topic(models.Model):
     texts = models.ManyToManyField(Text, related_name='topics',
                                    blank=True)
 
+    parent = models.ForeignKey('self', on_delete=models.CASCADE,
+                               related_name='subtopic', blank=True,
+                               null=True)
+
     @property
     def words_count(self):
         return self.words.count()
