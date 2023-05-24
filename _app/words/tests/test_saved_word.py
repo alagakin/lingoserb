@@ -3,8 +3,8 @@ from django.test import TestCase
 from django.urls import resolve, reverse
 from rest_framework import status
 from rest_framework.authtoken.models import Token
-from words.models import Word, Category, SavedWord
-from words.views import SavedWordListAPIView, SavedWordCreateAPIView, \
+from words.models import Word, SavedWord
+from words.views.views import SavedWordListAPIView, SavedWordCreateAPIView, \
     DestroySavedWordAPIView
 from rest_framework.test import APITestCase
 

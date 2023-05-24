@@ -1,6 +1,6 @@
 from django.urls import path
 
-from words.views import SavedWordListAPIView, SavedWordCreateAPIView, \
+from words.views.views import SavedWordListAPIView, SavedWordCreateAPIView, \
     DestroySavedWordAPIView, GetGameAPIView, SuccessRepetitionAPIView, \
     TextForWordAPIView, WordDetailAPIView, WordsListAPIView, \
     SavedWordsIDSAPIView, CategoriesListAPIView, RetrieveCategoriesAPIView, \
