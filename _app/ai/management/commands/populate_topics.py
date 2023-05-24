@@ -22,12 +22,15 @@ class Command(BaseCommand):
             "russian": "русское слово"
         }, ]"""
 
-    def add_arguments(self, parser):
-        parser.add_argument('topic', type=str, help='Topic')
+    def choose_topic(self):
+        topic = Topic.objects.filter(parent_id__gt=0).order_by('-words').first()
+        title_en = topic.translations.filter(lang='en').first().title
+        return title_en
 
     def handle(self, *args, **options):
-        prompt = self.prompt % (options['topic'])
         openai.api_key = os.getenv('OPENAI_KEY')
+        prompt = self.prompt % (self.choose_topic())
+
         try:
             chat_completion = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo", messages=[
