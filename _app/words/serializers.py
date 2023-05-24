@@ -1,7 +1,8 @@
 import random
 from rest_framework import serializers
-from words.models import SavedWord, Word, Translation, Text, TextTranslation, \
-    Category
+
+from topics.models import Topic
+from words.models import SavedWord, Word, Translation, Text, TextTranslation
 
 
 class WordSerializer(serializers.ModelSerializer):
@@ -35,7 +36,7 @@ class WordsGameSerializer(serializers.Serializer):
         representation = super().to_representation(instance)
 
         # todo lang
-        # todo random is too bad, need to get words from the same category
+        # todo random is too bad, need to get words from the same Topic
         incorrect_translations = Translation.objects.filter(lang='ru').exclude(
             word__id=instance.word.id).order_by('?')[:3]
 
@@ -87,7 +88,7 @@ class TranslationsForWordSerializer(serializers.Serializer):
     lang = serializers.CharField()
 
 
-class CategoriesForWordSerializer(serializers.Serializer):
+class TopicsForWordSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     title = serializers.CharField()
 
@@ -95,20 +96,20 @@ class CategoriesForWordSerializer(serializers.Serializer):
 class WordTranslationSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     title = serializers.CharField()
-    categories = serializers.CharField()
+    topics = serializers.CharField()
     texts_count = serializers.IntegerField(source='texts.count')
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         # todo lang
         translations = instance.translations.filter(lang='ru')
-        categories = instance.categories.all()
+        topics = instance.topics.all()
         serialized_translations = TranslationsForWordSerializer(translations,
                                                                 many=True)
-        serialized_categories = CategoriesForWordSerializer(categories,
-                                                            many=True)
+        serialized_topics = TopicsForWordSerializer(topics,
+                                                    many=True)
         representation['translation'] = serialized_translations.data
-        representation['categories'] = serialized_categories.data
+        representation['topics'] = serialized_topics.data
 
         return representation
 
@@ -125,17 +126,17 @@ class SavedWordListSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class CategorySerializer(serializers.ModelSerializer):
+class TopicSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Category
+        model = Topic
         fields = ('id', 'title', 'description', 'picture', 'words_count')
 
 
-class CategoryWordsSerializer(serializers.Serializer):
+class TopicWordsSerializer(serializers.Serializer):
     words = WordTranslationSerializer(many=True)
 
 
-class CategoryTextsSerializer(serializers.Serializer):
+class TopicTextsSerializer(serializers.Serializer):
     texts = TextSerializer(many=True)
 
 
@@ -148,4 +149,3 @@ class ProgressSerializer(serializers.Serializer):
 
     def get_cnt(self, instance):
         return instance.repetition_count
-

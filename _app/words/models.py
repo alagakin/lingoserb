@@ -77,28 +77,6 @@ def word_pre_save(sender, instance, **kwargs):
     return instance
 
 
-class Category(models.Model):
-    title = models.CharField(max_length=255)
-    # todo lang?
-    description = models.TextField(blank=True, null=True)
-    picture = models.ImageField(upload_to=settings.MEDIA_ROOT, null=True,
-                                blank=True)
-    words = models.ManyToManyField(Word, related_name='categories',
-                                   blank=True)
-    texts = models.ManyToManyField(Text, related_name='categories',
-                                   blank=True)
-
-    class Meta:
-        verbose_name_plural = "categories"
-
-    @property
-    def words_count(self):
-        return self.words.count()
-
-    def __str__(self):
-        return self.title
-
-
 class Translation(models.Model):
     title = models.CharField(max_length=255)
     LANG_CHOICES = [

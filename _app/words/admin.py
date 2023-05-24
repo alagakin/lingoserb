@@ -1,6 +1,5 @@
 from django.contrib import admin
-from words.models import Word, Translation, SavedWord, Text, TextTranslation, \
-    Category
+from words.models import Word, Translation, SavedWord, Text, TextTranslation
 
 
 class TranslationInlineAdmin(admin.TabularInline):
@@ -44,15 +43,6 @@ class TextTranslationAdmin(admin.ModelAdmin):
 
     def get_words(self, obj):
         return ", ".join(obj.text.words.values_list('title', flat=True))
-    get_words.short_description = 'Words'
-
-
-class CategoryAdmin(admin.ModelAdmin):
-    list_display = ['id', 'words_count', 'title', 'picture']
-    readonly_fields = ['get_words']
-
-    def get_words(self, obj):
-        return ", ".join(obj.words.values_list('title', flat=True))
 
     get_words.short_description = 'Words'
 
@@ -62,5 +52,3 @@ admin.site.register(Translation, TranslationAdmin)
 admin.site.register(SavedWord, SavedWordAdmin)
 admin.site.register(Text, TextAdmin)
 admin.site.register(TextTranslation, TextTranslationAdmin)
-admin.site.register(Category, CategoryAdmin)
-

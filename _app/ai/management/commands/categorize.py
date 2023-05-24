@@ -5,7 +5,8 @@ from django.core.management.base import BaseCommand, CommandError
 import json
 
 from learn_serbian.utils import transliterate
-from words.models import Word, Category, Translation
+from topics.models import Topic
+from words.models import Word, Translation
 import logging
 
 logger = logging.getLogger('openai')
@@ -13,7 +14,7 @@ logger = logging.getLogger('openai')
 
 class Command(BaseCommand):
     help = "Imports base 3000 words with English and Russian translations"
-    prompt = """Provide 50 Serbian words for category '%s' with translation 
+    prompt = """Provide 50 Serbian words for topic '%s' with translation 
         to Russian. Use JSON only, like this {
     "Topic": [
         {
@@ -22,10 +23,10 @@ class Command(BaseCommand):
         }, ]"""
 
     def add_arguments(self, parser):
-        parser.add_argument('category', type=str, help='Topic')
+        parser.add_argument('topic', type=str, help='Topic')
 
     def handle(self, *args, **options):
-        prompt = self.prompt % (options['category'])
+        prompt = self.prompt % (options['topic'])
         openai.api_key = os.getenv('OPENAI_KEY')
         try:
             chat_completion = openai.ChatCompletion.create(
@@ -35,16 +36,16 @@ class Command(BaseCommand):
             )
             result = chat_completion['choices'][0]['message']['content']
             result = json.loads(result)
-            category_name = options['category']
-            pairs = result[category_name]
+            topic_name = options['topic']
+            pairs = result[topic_name]
 
             try:
-                category = Category.objects.get(title=category_name.lower())
-            except Category.DoesNotExist:
-                category = Category(
-                    title=category_name.lower()
+                topic = Topic.objects.get(title=topic_name.lower())
+            except Topic.DoesNotExist:
+                topic = Topic(
+                    title=topic_name.lower()
                 )
-                category.save()
+                topic.save()
 
             for pair in pairs:
                 sr_word = transliterate(pair['serbian'].lower())
@@ -63,7 +64,7 @@ class Command(BaseCommand):
                     translation = Translation(lang='ru', word=word,
                                               title=ru_word)
                     translation.save()
-                word.categories.add(category)
+                word.topics.add(topic)
 
             logger.info(pairs)
         except KeyError as key_error:

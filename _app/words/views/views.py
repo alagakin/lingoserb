@@ -3,13 +3,15 @@ from django.utils import timezone
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from words.models import SavedWord, Word, Category
+
+from topics.models import Topic
+from words.models import SavedWord, Word
 from rest_framework.permissions import IsAuthenticated
 from words.permissions import UserOwsSavedWord
 from words.serializers import SavedWordListSerializer, SaveWordCreateSerializer, \
     WordsGameSerializer, TextsOfWithWordSerializer, \
-    WordTranslationSerializer, SavedWordsIds, CategorySerializer, \
-    CategoryWordsSerializer, CategoryTextsSerializer, ProgressSerializer
+    WordTranslationSerializer, SavedWordsIds, TopicSerializer, \
+    TopicWordsSerializer, TopicTextsSerializer, ProgressSerializer
 from words.services.games import CardsGame
 from django.core.cache import cache
 
@@ -132,42 +134,42 @@ class SavedWordsIDSAPIView(APIView):
         return Response(serialized.data, status=status.HTTP_200_OK)
 
 
-class CategoriesListAPIView(generics.ListAPIView):
+class TopicsListAPIView(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
+    queryset = Topic.objects.all()
+    serializer_class = TopicSerializer
 
 
-class RetrieveCategoriesAPIView(generics.RetrieveAPIView):
+class RetrieveTopicsAPIView(generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
+    queryset = Topic.objects.all()
+    serializer_class = TopicSerializer
 
 
-class CategoryWordsAPIView(generics.RetrieveAPIView):
+class TopicWordsAPIView(generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
-    queryset = Category.objects.all()
-    serializer_class = CategoryWordsSerializer
+    queryset = Topic.objects.all()
+    serializer_class = TopicWordsSerializer
 
 
-class CategoryTextsAPIView(generics.RetrieveAPIView):
+class TopicTextsAPIView(generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
-    queryset = Category.objects.all()
-    serializer_class = CategoryTextsSerializer
+    queryset = Topic.objects.all()
+    serializer_class = TopicTextsSerializer
 
 
-class SaveWordsFromCategoryAPIView(APIView):
+class SaveWordsFromTopicAPIView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
         try:
-            category = Category.objects.get(pk=kwargs['pk'])
+            topic = Topic.objects.get(pk=kwargs['pk'])
             saved_words = [saved_word.word for saved_word in
                            SavedWord.objects.filter(user=request.user)]
 
-            category_words = Word.objects.filter(categories=category)
+            topic_words = Word.objects.filter(topics=topic)
 
-            for word in category_words:
+            for word in topic_words:
                 if word not in saved_words:
                     try:
                         SavedWord.objects.create(user=request.user, word=word)
@@ -179,7 +181,7 @@ class SaveWordsFromCategoryAPIView(APIView):
 
             return Response(None, status=status.HTTP_201_CREATED)
 
-        except Category.DoesNotExist:
+        except Topic.DoesNotExist:
             return Response(None, status=status.HTTP_404_NOT_FOUND)
 
 

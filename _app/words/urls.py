@@ -4,8 +4,8 @@ from words.views.achievements import AchievementsAPIView
 from words.views.views import SavedWordListAPIView, SavedWordCreateAPIView, \
     DestroySavedWordAPIView, GetGameAPIView, SuccessRepetitionAPIView, \
     TextForWordAPIView, WordDetailAPIView, WordsListAPIView, \
-    SavedWordsIDSAPIView, CategoriesListAPIView, RetrieveCategoriesAPIView, \
-    CategoryWordsAPIView, CategoryTextsAPIView, SaveWordsFromCategoryAPIView, \
+    SavedWordsIDSAPIView, TopicsListAPIView, RetrieveTopicsAPIView, \
+    TopicWordsAPIView, TopicTextsAPIView, SaveWordsFromTopicAPIView, \
     ProgressAPIView
 
 urlpatterns = [
@@ -26,18 +26,18 @@ urlpatterns = [
     path('text/for-word/<int:pk>/', TextForWordAPIView.as_view(),
          name='text-for-word'),
 
-    path('category/', CategoriesListAPIView.as_view(),
-         name='category-list-view'),
-    path('category/<int:pk>/', RetrieveCategoriesAPIView.as_view(),
-         name='category-retrieve-view'),
-    path('category/<int:pk>/words/', CategoryWordsAPIView.as_view(),
-         name='category-words-view'),
+    path('topic/', TopicsListAPIView.as_view(),
+         name='topic-list-view'),
+    path('topic/<int:pk>/', RetrieveTopicsAPIView.as_view(),
+         name='topic-retrieve-view'),
+    path('topic/<int:pk>/words/', TopicWordsAPIView.as_view(),
+         name='topic-words-view'),
 
-    path('category/<int:pk>/texts/', CategoryTextsAPIView.as_view(),
-         name='category-texts-view'),
-    path('saved/from-category/<int:pk>/',
-         SaveWordsFromCategoryAPIView.as_view(),
-         name='add-to-saved-from-category'),
+    path('topic/<int:pk>/texts/', TopicTextsAPIView.as_view(),
+         name='topic-texts-view'),
+    path('saved/from-topic/<int:pk>/',
+         SaveWordsFromTopicAPIView.as_view(),
+         name='add-to-saved-from-topic'),
     path('saved/progress/',
          ProgressAPIView.as_view(),
          name='saved-progress'),
