@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'djoser',
     'accounts',
     'words',
+    'topics',
     'ai'
 ]
 
