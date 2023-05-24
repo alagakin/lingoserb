@@ -14,22 +14,25 @@ logger = logging.getLogger('openai')
 
 class Command(BaseCommand):
     help = "Imports base 3000 words with English and Russian translations"
-    prompt = """Provide 50 Serbian words for topic '%s' with translation 
-        to Russian. Use JSON only, like this {
+    prompt = """Provide 30 Serbian words for topic '%s' with translation 
+        to Russian and English. Use singular for of nouns and infinitives for 
+        verbs. Use JSON only, like this {
     "Topic": [
         {
             "serbian": "serbian word",
-            "russian": "русское слово"
+            "russian": "русское слово",
+            "english": "english word"
         }, ]"""
 
     def choose_topic(self):
-        topic = Topic.objects.filter(parent_id__gt=0).order_by('-words').first()
-        title_en = topic.translations.filter(lang='en').first().title
-        return title_en
+        self.topic = Topic.objects.filter(parent_id__gt=0).order_by(
+            '-words').first()
+        self.topic_en = self.topic.translations.filter(lang='en').first().title
 
     def handle(self, *args, **options):
+        self.choose_topic()
         openai.api_key = os.getenv('OPENAI_KEY')
-        prompt = self.prompt % (self.choose_topic())
+        prompt = self.prompt % (self.topic_en)
 
         try:
             chat_completion = openai.ChatCompletion.create(
@@ -39,20 +42,12 @@ class Command(BaseCommand):
             )
             result = chat_completion['choices'][0]['message']['content']
             result = json.loads(result)
-            topic_name = options['topic']
-            pairs = result[topic_name]
-
-            try:
-                topic = Topic.objects.get(title=topic_name.lower())
-            except Topic.DoesNotExist:
-                topic = Topic(
-                    title=topic_name.lower()
-                )
-                topic.save()
+            pairs = result[self.topic_en]
 
             for pair in pairs:
                 sr_word = transliterate(pair['serbian'].lower())
                 ru_word = pair['russian'].lower()
+                en_word = pair['english'].lower()
                 try:
                     word = Word.objects.get(title=sr_word)
                 except Word.DoesNotExist:
@@ -62,12 +57,20 @@ class Command(BaseCommand):
                     word.save()
                 try:
                     Translation.objects.get(lang='ru', word=word,
-                                                          title=ru_word)
+                                            title=ru_word)
                 except Translation.DoesNotExist:
                     translation = Translation(lang='ru', word=word,
                                               title=ru_word)
                     translation.save()
-                word.topics.add(topic)
+
+                try:
+                    Translation.objects.get(lang='en', word=word,
+                                            title=en_word)
+                except Translation.DoesNotExist:
+                    translation = Translation(lang='en', word=word,
+                                              title=en_word)
+                    translation.save()
+                word.topics.add(self.topic)
 
             logger.info(pairs)
         except KeyError as key_error:
