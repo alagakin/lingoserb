@@ -1,5 +1,6 @@
 from django.urls import path
 
+from words.views.achievements import AchievementsAPIView
 from words.views.views import SavedWordListAPIView, SavedWordCreateAPIView, \
     DestroySavedWordAPIView, GetGameAPIView, SuccessRepetitionAPIView, \
     TextForWordAPIView, WordDetailAPIView, WordsListAPIView, \
@@ -40,5 +41,5 @@ urlpatterns = [
     path('saved/progress/',
          ProgressAPIView.as_view(),
          name='saved-progress'),
-
+    path('achievements/', AchievementsAPIView.as_view(), name='achievements')
 ]
