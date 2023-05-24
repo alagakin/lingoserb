@@ -1,4 +1,6 @@
 from django.contrib import admin
+
+from topics.models import Topic
 from words.models import Word, Translation, SavedWord, Text, TextTranslation
 
 
@@ -12,9 +14,14 @@ class TextTranslationInlineAdmin(admin.TabularInline):
     extra = 2
 
 
+class TopicsOfTheWordInlineAdmin(admin.TabularInline):
+    model = Topic.words.through
+    extra = 2
+
+
 class WordAdmin(admin.ModelAdmin):
     list_display = ['title', 'part', 'texts_count']
-    inlines = [TranslationInlineAdmin]
+    inlines = [TranslationInlineAdmin, TopicsOfTheWordInlineAdmin]
 
 
 class TranslationAdmin(admin.ModelAdmin):
