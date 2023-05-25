@@ -1,11 +1,11 @@
 import os
 
 import openai
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 import json
 
 from learn_serbian.utils import transliterate
-from words.models import Word, Topic, Translation, Text, TextTranslation
+from words.models import Word, Text, TextTranslation
 import logging
 
 logger = logging.getLogger('openai')
