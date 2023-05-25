@@ -7,12 +7,18 @@ from topics.models import Topic
 from topics.serializers import TopicSerializer, TopicWordsSerializer, \
     TopicTextsSerializer
 from words.models import SavedWord, Word
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 
 
 class TopicsListAPIView(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = Topic.objects.filter(parent_id=None)
     serializer_class = TopicSerializer
+
+    @method_decorator(cache_page(60))
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
 
 
 class RetrieveTopicsAPIView(generics.RetrieveAPIView):
