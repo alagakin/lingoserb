@@ -26,6 +26,10 @@ class RetrieveTopicsAPIView(generics.RetrieveAPIView):
     queryset = Topic.objects.all()
     serializer_class = TopicSerializer
 
+    @method_decorator(cache_page(60))
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
 
 class TopicWordsAPIView(generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
