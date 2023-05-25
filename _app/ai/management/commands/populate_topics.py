@@ -24,56 +24,36 @@ class Command(BaseCommand):
             "english": "english word"
         }, ]"""
 
-    def choose_topic(self):
-        self.topic = Topic.objects.filter(parent_id__gt=0).order_by(
-            '-words').first()
-        self.topic_en = self.topic.translations.filter(lang='en').first().title
-
     def handle(self, *args, **options):
-        self.choose_topic()
         openai.api_key = os.getenv('OPENAI_KEY')
-        prompt = self.prompt % (self.topic_en)
+        topic = Topic.objects.filter(parent_id__gt=0).order_by(
+            '-words').first()
+        topic_en = topic.translations.filter(lang='en').first().title
+        prompt = self.prompt % topic_en
 
-        try:
-            chat_completion = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo", messages=[
-                    {"role": "user",
-                     "content": prompt}]
-            )
-            result = chat_completion['choices'][0]['message']['content']
-            result = json.loads(result)
-            pairs = result[self.topic_en]
+        chat_completion = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo", messages=[
+                {"role": "user",
+                 "content": prompt}]
+        )
+        result = chat_completion['choices'][0]['message']['content']
+        result = json.loads(result)
+        pairs = result[topic_en]
+        logger.info(pairs)
 
-            for pair in pairs:
-                sr_word = transliterate(pair['serbian'].lower())
-                ru_word = pair['russian'].lower()
-                en_word = pair['english'].lower()
-                try:
-                    word = Word.objects.get(title=sr_word)
-                except Word.DoesNotExist:
-                    word = Word(
-                        title=sr_word
-                    )
-                    word.save()
-                try:
-                    Translation.objects.get(lang='ru', word=word,
-                                            title=ru_word)
-                except Translation.DoesNotExist:
-                    translation = Translation(lang='ru', word=word,
+        for pair in pairs:
+            sr_word = transliterate(pair['serbian'].lower())
+            ru_word = pair['russian'].lower()
+            en_word = pair['english'].lower()
+
+            word = Word.objects.get_or_create(title=sr_word)
+            word_instance = word[0]
+
+            Translation.objects.get_or_create(lang='ru',
+                                              word=word_instance,
                                               title=ru_word)
-                    translation.save()
-
-                try:
-                    Translation.objects.get(lang='en', word=word,
-                                            title=en_word)
-                except Translation.DoesNotExist:
-                    translation = Translation(lang='en', word=word,
+            Translation.objects.get_or_create(lang='en',
+                                              word=word_instance,
                                               title=en_word)
-                    translation.save()
-                word.topics.add(self.topic)
+            word_instance.topics.add(topic)
 
-            logger.info(pairs)
-        except KeyError as key_error:
-            logger.error(key_error)
-        except ValueError as value_error:
-            logger.error(value_error)
