@@ -20,7 +20,7 @@ class TopicsOfTheWordInlineAdmin(admin.TabularInline):
 
 
 class WordAdmin(admin.ModelAdmin):
-    list_display = ['title', 'part', 'texts_count']
+    list_display = ['title', 'part', 'texts_count', 's3_id']
     inlines = [TranslationInlineAdmin, TopicsOfTheWordInlineAdmin]
 
 

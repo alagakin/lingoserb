@@ -91,6 +91,7 @@ class WordTranslationSerializer(serializers.Serializer):
     title = serializers.CharField()
     topics = serializers.CharField()
     texts_count = serializers.IntegerField(source='texts.count')
+    audio_link = serializers.CharField()
 
     def to_representation(self, instance):
         from topics.serializers import TopicsForWordSerializer
