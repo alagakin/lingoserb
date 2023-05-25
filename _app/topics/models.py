@@ -14,7 +14,7 @@ class Topic(models.Model):
                                    blank=True)
 
     parent = models.ForeignKey('self', on_delete=models.CASCADE,
-                               related_name='subtopic', blank=True,
+                               related_name='subtopics', blank=True,
                                null=True)
 
     @property
