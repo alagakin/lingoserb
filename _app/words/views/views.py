@@ -3,15 +3,12 @@ from django.utils import timezone
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
-from topics.models import Topic
 from words.models import SavedWord, Word
 from rest_framework.permissions import IsAuthenticated
 from words.permissions import UserOwsSavedWord
 from words.serializers import SavedWordListSerializer, SaveWordCreateSerializer, \
     WordsGameSerializer, TextsOfWithWordSerializer, \
-    WordTranslationSerializer, SavedWordsIds, TopicSerializer, \
-    TopicWordsSerializer, TopicTextsSerializer, ProgressSerializer
+    WordTranslationSerializer, SavedWordsIds, ProgressSerializer
 from words.services.games import CardsGame
 from django.core.cache import cache
 
@@ -132,57 +129,6 @@ class SavedWordsIDSAPIView(APIView):
         saved_words = SavedWord.objects.filter(user=request.user.id)
         serialized = SavedWordsIds(saved_words, many=True)
         return Response(serialized.data, status=status.HTTP_200_OK)
-
-
-class TopicsListAPIView(generics.ListAPIView):
-    permission_classes = (IsAuthenticated,)
-    queryset = Topic.objects.all()
-    serializer_class = TopicSerializer
-
-
-class RetrieveTopicsAPIView(generics.RetrieveAPIView):
-    permission_classes = (IsAuthenticated,)
-    queryset = Topic.objects.all()
-    serializer_class = TopicSerializer
-
-
-class TopicWordsAPIView(generics.RetrieveAPIView):
-    permission_classes = (IsAuthenticated,)
-    queryset = Topic.objects.all()
-    serializer_class = TopicWordsSerializer
-
-
-class TopicTextsAPIView(generics.RetrieveAPIView):
-    permission_classes = (IsAuthenticated,)
-    queryset = Topic.objects.all()
-    serializer_class = TopicTextsSerializer
-
-
-class SaveWordsFromTopicAPIView(APIView):
-    permission_classes = (IsAuthenticated,)
-
-    def post(self, request, *args, **kwargs):
-        try:
-            topic = Topic.objects.get(pk=kwargs['pk'])
-            saved_words = [saved_word.word for saved_word in
-                           SavedWord.objects.filter(user=request.user)]
-
-            topic_words = Word.objects.filter(topics=topic)
-
-            for word in topic_words:
-                if word not in saved_words:
-                    try:
-                        SavedWord.objects.create(user=request.user, word=word)
-                    except IntegrityError:
-                        existing_saved_word = SavedWord.all_objects.get(
-                            user=request.user, word=word)
-                        existing_saved_word.deleted = False
-                        existing_saved_word.save(update_fields=['deleted'])
-
-            return Response(None, status=status.HTTP_201_CREATED)
-
-        except Topic.DoesNotExist:
-            return Response(None, status=status.HTTP_404_NOT_FOUND)
 
 
 class ProgressAPIView(APIView):

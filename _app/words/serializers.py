@@ -1,8 +1,6 @@
 import random
 from rest_framework import serializers
-
-from topics.models import Topic
-from words.models import SavedWord, Word, Translation, Text, TextTranslation
+from words.models import SavedWord, Word, Translation, TextTranslation
 
 
 class WordSerializer(serializers.ModelSerializer):
@@ -88,11 +86,6 @@ class TranslationsForWordSerializer(serializers.Serializer):
     lang = serializers.CharField()
 
 
-class TopicsForWordSerializer(serializers.Serializer):
-    id = serializers.IntegerField()
-    title = serializers.CharField()
-
-
 class WordTranslationSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     title = serializers.CharField()
@@ -100,6 +93,8 @@ class WordTranslationSerializer(serializers.Serializer):
     texts_count = serializers.IntegerField(source='texts.count')
 
     def to_representation(self, instance):
+        from topics.serializers import TopicsForWordSerializer
+
         representation = super().to_representation(instance)
         # todo lang
         translations = instance.translations.filter(lang='ru')
@@ -124,20 +119,6 @@ class SavedWordListSerializer(serializers.ModelSerializer):
     class Meta:
         model = SavedWord
         fields = '__all__'
-
-
-class TopicSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Topic
-        fields = ('id', 'title', 'description', 'picture', 'words_count')
-
-
-class TopicWordsSerializer(serializers.Serializer):
-    words = WordTranslationSerializer(many=True)
-
-
-class TopicTextsSerializer(serializers.Serializer):
-    texts = TextSerializer(many=True)
 
 
 class ProgressSerializer(serializers.Serializer):

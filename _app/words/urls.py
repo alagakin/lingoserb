@@ -4,9 +4,7 @@ from words.views.achievements import AchievementsAPIView
 from words.views.views import SavedWordListAPIView, SavedWordCreateAPIView, \
     DestroySavedWordAPIView, GetGameAPIView, SuccessRepetitionAPIView, \
     TextForWordAPIView, WordDetailAPIView, WordsListAPIView, \
-    SavedWordsIDSAPIView, TopicsListAPIView, RetrieveTopicsAPIView, \
-    TopicWordsAPIView, TopicTextsAPIView, SaveWordsFromTopicAPIView, \
-    ProgressAPIView
+    SavedWordsIDSAPIView, ProgressAPIView
 
 urlpatterns = [
     path('saved/', SavedWordListAPIView.as_view(),
@@ -25,19 +23,6 @@ urlpatterns = [
          name='word-detail'),
     path('text/for-word/<int:pk>/', TextForWordAPIView.as_view(),
          name='text-for-word'),
-
-    path('topic/', TopicsListAPIView.as_view(),
-         name='topic-list-view'),
-    path('topic/<int:pk>/', RetrieveTopicsAPIView.as_view(),
-         name='topic-retrieve-view'),
-    path('topic/<int:pk>/words/', TopicWordsAPIView.as_view(),
-         name='topic-words-view'),
-
-    path('topic/<int:pk>/texts/', TopicTextsAPIView.as_view(),
-         name='topic-texts-view'),
-    path('saved/from-topic/<int:pk>/',
-         SaveWordsFromTopicAPIView.as_view(),
-         name='add-to-saved-from-topic'),
     path('saved/progress/',
          ProgressAPIView.as_view(),
          name='saved-progress'),
