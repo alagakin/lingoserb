@@ -11,7 +11,7 @@ from words.models import SavedWord, Word
 
 class TopicsListAPIView(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
-    queryset = Topic.objects.all()
+    queryset = Topic.objects.filter(parent_id=None)
     serializer_class = TopicSerializer
 
 
