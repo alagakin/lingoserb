@@ -1,6 +1,7 @@
 from rest_framework.permissions import BasePermission
 
-from words.models import SavedWord
+from learning.models import SavedWord
+
 
 class UserOwsSavedWord(BasePermission):
     def has_permission(self, request, view):

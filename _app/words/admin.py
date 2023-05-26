@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from topics.models import Topic
-from words.models import Word, Translation, SavedWord, Text, TextTranslation
+from words.models import Word, Translation, Text, TextTranslation
 
 
 class TranslationInlineAdmin(admin.TabularInline):
@@ -28,10 +28,6 @@ class TranslationAdmin(admin.ModelAdmin):
     list_display = ['title', 'lang', 'word']
 
 
-class SavedWordAdmin(admin.ModelAdmin):
-    list_display = ['word', 'user', 'last_repetition', 'repetition_count']
-
-
 class TextAdmin(admin.ModelAdmin):
     list_display = ['content', 'words_count', 'translations_count', 'get_words']
     readonly_fields = ['words_count', 'get_words']
@@ -56,6 +52,5 @@ class TextTranslationAdmin(admin.ModelAdmin):
 
 admin.site.register(Word, WordAdmin)
 admin.site.register(Translation, TranslationAdmin)
-admin.site.register(SavedWord, SavedWordAdmin)
 admin.site.register(Text, TextAdmin)
 admin.site.register(TextTranslation, TextTranslationAdmin)

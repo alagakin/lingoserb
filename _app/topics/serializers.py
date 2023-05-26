@@ -2,8 +2,8 @@ from rest_framework import serializers
 from django.core.cache import cache
 
 from accounts.models import CustomUser
+from learning.models import SavedWord
 from topics.models import Topic
-from words.models import SavedWord
 from words.serializers import WordTranslationSerializer, TextSerializer
 
 

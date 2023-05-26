@@ -3,10 +3,12 @@ from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
+
+from learning.models import SavedWord
 from topics.models import Topic
 from topics.serializers import TopicSerializer, TopicWordsSerializer, \
     TopicTextsSerializer
-from words.models import SavedWord, Word
+from words.models import Word
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 

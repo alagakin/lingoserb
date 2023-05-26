@@ -1,4 +1,4 @@
-from words.models import SavedWord
+from learning.models import SavedWord
 
 
 class Achievements:

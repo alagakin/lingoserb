@@ -1,18 +1,10 @@
 from rest_framework import serializers
-from words.models import SavedWord, Word, TextTranslation
+from words.models import Word, TextTranslation
 
 
 class WordSerializer(serializers.ModelSerializer):
     class Meta:
         model = Word
-        fields = '__all__'
-
-
-class SaveWordCreateSerializer(serializers.ModelSerializer):
-    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
-
-    class Meta:
-        model = SavedWord
         fields = '__all__'
 
 
@@ -69,26 +61,3 @@ class WordTranslationSerializer(serializers.Serializer):
         representation['topics'] = serialized_topics.data
 
         return representation
-
-
-class SavedWordsIds(serializers.Serializer):
-    id = serializers.IntegerField(source='word.id')
-
-
-class SavedWordListSerializer(serializers.ModelSerializer):
-    word = WordTranslationSerializer(read_only=True)
-
-    class Meta:
-        model = SavedWord
-        fields = '__all__'
-
-
-class ProgressSerializer(serializers.Serializer):
-    id = serializers.SerializerMethodField()
-    cnt = serializers.SerializerMethodField()
-
-    def get_id(self, instance):
-        return instance.word.id
-
-    def get_cnt(self, instance):
-        return instance.repetition_count

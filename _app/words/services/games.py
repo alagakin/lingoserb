@@ -1,6 +1,7 @@
 from django.db.models import Q
 from datetime import datetime, timedelta
-from words.models import SavedWord
+
+from learning.models import SavedWord
 
 now = datetime.now()
 
