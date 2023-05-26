@@ -129,3 +129,9 @@ class SavedWord(models.Model):
 
     objects = SavedWordsManager()
     all_objects = SavedWordsManagerAll()
+
+    def save(self, *args, **kwargs):
+        max_value = 5
+        if self.repetition_count > max_value:
+            self.repetition_count = max_value
+        super().save(*args, **kwargs)
