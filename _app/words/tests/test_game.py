@@ -3,8 +3,9 @@ from django.test import TestCase
 from django.urls import resolve, reverse
 from rest_framework import status
 from rest_framework.authtoken.models import Token
+
+from learning.views import GetGameAPIView, SuccessRepetitionAPIView
 from words.models import Word, SavedWord, Translation
-from words.views.views import SuccessRepetitionAPIView, GetGameAPIView
 from rest_framework.test import APITestCase
 import json
 

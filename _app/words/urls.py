@@ -2,7 +2,7 @@ from django.urls import path
 
 from words.views.achievements import AchievementsAPIView
 from words.views.views import SavedWordListAPIView, SavedWordCreateAPIView, \
-    DestroySavedWordAPIView, GetGameAPIView, SuccessRepetitionAPIView, \
+    DestroySavedWordAPIView, \
     TextForWordAPIView, WordDetailAPIView, WordsListAPIView, \
     SavedWordsIDSAPIView, ProgressAPIView
 
@@ -15,9 +15,6 @@ urlpatterns = [
     path('saved/delete/',
          DestroySavedWordAPIView.as_view(),
          name='saved-word-destroy'),
-    path('game/', GetGameAPIView.as_view(), name='get-game'),
-    path('game/<int:pk>/success/', SuccessRepetitionAPIView.as_view(),
-         name='success-repetition'),
     path('words/', WordsListAPIView.as_view(), name='word-list'),
     path('word/<int:pk>/', WordDetailAPIView.as_view(),
          name='word-detail'),
