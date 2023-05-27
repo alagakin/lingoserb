@@ -20,6 +20,7 @@ class SavedWord(models.Model):
     last_repetition = models.DateTimeField(null=True, blank=True)
     repetition_count = models.PositiveSmallIntegerField(default=0)
     deleted = models.BooleanField(default=False)
+    skipped = models.BooleanField(default=False)
 
     def delete(self, *args, **kwargs):
         self.deleted = True
