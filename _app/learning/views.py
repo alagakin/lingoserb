@@ -110,3 +110,13 @@ class SuccessRepetitionAPIView(APIView):
         saved_word.last_repetition = timezone.now()
         saved_word.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class SkipWordAPIView(APIView):
+    permission_classes = (UserOwsSavedWord,)
+
+    def patch(self, request, *args, **kwargs):
+        saved_word = SavedWord.objects.get(id=kwargs['pk'])
+        saved_word.skipped = not saved_word.skipped
+        saved_word.save()
+        return Response(saved_word.skipped, status=status.HTTP_204_NO_CONTENT)
