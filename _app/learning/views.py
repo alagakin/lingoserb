@@ -8,6 +8,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 
 from learning.models import SavedWord
+from learning.utils import topic_to_saved
 from topics.models import Topic
 from topics.permissions import TopicIsSubtopic
 from learning.serializers import SavedWordListSerializer, \
@@ -98,16 +99,7 @@ class StartLearningAPIView(APIView):
 
     def post(self, request, *args, **kwargs):
         subtopic = Topic.objects.get(id=kwargs['subtopic_id'])
-        # todo what if word is deleted by user?
-        for word in subtopic.words.all():
-            try:
-                saved_word = SavedWord(
-                    user=request.user,
-                    word_id=word.id
-                )
-                saved_word.save()
-            except IntegrityError:
-                pass
+        topic_to_saved(user=request.user, topic=subtopic)
 
         return Response(None, status=status.HTTP_204_NO_CONTENT)
 

@@ -7,17 +7,22 @@ from rest_framework.permissions import IsAuthenticated
 from game.serializers import WordsGameSerializer
 from game.services.games import CardsGame
 from learning.models import SavedWord
+from topics.models import Topic
 
 
 class GetGameAPIView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
-        game = CardsGame(request.user.id)
-        saved_words = game.get_saved_words()
+        try:
+            topic = Topic.objects.get(id=kwargs['topic_id'])
+            game = CardsGame(request.user.id, topic)
+            words = game.get_words()
 
-        serialized = WordsGameSerializer(saved_words, many=True)
-        return Response(serialized.data, status=status.HTTP_200_OK)
+            serialized = WordsGameSerializer(words, many=True)
+            return Response(serialized.data, status=status.HTTP_200_OK)
+        except Topic.DoesNotExist:
+            return Response(None, status=status.HTTP_404_NOT_FOUND)
 
 
 class SuccessRepetitionAPIView(APIView):

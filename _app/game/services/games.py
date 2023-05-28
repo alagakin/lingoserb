@@ -1,7 +1,11 @@
+from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.db.models import Q
 from datetime import datetime, timedelta
 
 from learning.models import SavedWord
+from learning.utils import topic_to_saved
+from topics.models import Topic
 
 now = datetime.now()
 
@@ -12,14 +16,17 @@ month_ago = now - timedelta(days=30)
 
 
 class CardsGame():
-    def __init__(self, user_id: int):
-        self.user_id = user_id
+    def __init__(self, user_id: int, topic: Topic):
+        self.user = get_user_model().objects.get(id=user_id)
+        self.topic = topic
+        topic_to_saved(user=self.user, topic=self.topic)
 
-    def get_saved_words(self):
-        return SavedWord.objects.filter(user_id=self.user_id).filter(
+    def get_words(self):
+        return SavedWord.objects.filter(user=self.user,
+                                        word__topics__exact=self.topic).filter(
             Q(repetition_count__in=[1, 2], last_repetition__lte=one_day_ago) |
             Q(repetition_count__in=[3], last_repetition__lte=three_days_ago) |
             Q(repetition_count__in=[4], last_repetition__lte=week_ago) |
             Q(repetition_count__gte=5, last_repetition__lte=month_ago) |
             Q(last_repetition=None)
-        ).order_by('repetition_count')[:10]
+        ).order_by('repetition_count')[:settings.WORDS_PER_ITERATION]

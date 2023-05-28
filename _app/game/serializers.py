@@ -15,6 +15,7 @@ class WordsGameSerializer(serializers.Serializer):
     word = serializers.CharField(source='word.title')
     last_repetition = serializers.DateTimeField()
     repetition_count = serializers.IntegerField()
+    audio_link = serializers.CharField(source='word.audio_link')
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
