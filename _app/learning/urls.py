@@ -2,7 +2,8 @@ from django.urls import path
 
 from learning.views import GetGameAPIView, SuccessRepetitionAPIView, \
     SavedWordListAPIView, SavedWordsIDSAPIView, SavedWordCreateAPIView, \
-    DestroySavedWordAPIView, ProgressAPIView, SkipWordAPIView
+    DestroySavedWordAPIView, ProgressAPIView, SkipWordAPIView, \
+    StartLearningAPIView
 
 urlpatterns = [
     path('game/', GetGameAPIView.as_view(), name='get-game'),
@@ -20,5 +21,7 @@ urlpatterns = [
          ProgressAPIView.as_view(),
          name='saved-progress'),
     path('saved/<int:pk>/skip/', SkipWordAPIView.as_view(),
-         name='skip-saved-word')
+         name='skip-saved-word'),
+    path('learning/<int:subtopic_id>/', StartLearningAPIView.as_view(),
+         name='start-learning')
 ]

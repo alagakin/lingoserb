@@ -7,6 +7,9 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 
 from learning.models import SavedWord
+from topics.models import Topic
+from topics.permissions import TopicIsSubtopic
+from words.models import Word
 from words.permissions import UserOwsSavedWord
 from learning.serializers import WordsGameSerializer, SavedWordListSerializer, \
     SaveWordCreateSerializer, SavedWordsIds, ProgressSerializer
@@ -120,3 +123,22 @@ class SkipWordAPIView(APIView):
         saved_word.skipped = not saved_word.skipped
         saved_word.save()
         return Response(saved_word.skipped, status=status.HTTP_204_NO_CONTENT)
+
+
+class StartLearningAPIView(APIView):
+    permission_classes = (IsAuthenticated, TopicIsSubtopic)
+
+    def post(self, request, *args, **kwargs):
+        subtopic = Topic.objects.get(id=kwargs['subtopic_id'])
+        # todo what if word is deleted by user?
+        for word in subtopic.words.all():
+            try:
+                saved_word = SavedWord(
+                    user=request.user,
+                    word_id=word.id
+                )
+                saved_word.save()
+            except IntegrityError:
+                pass
+
+        return Response(None, status=status.HTTP_204_NO_CONTENT)
