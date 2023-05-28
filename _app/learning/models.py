@@ -19,6 +19,7 @@ class SavedWord(models.Model):
     word = models.ForeignKey(Word, on_delete=models.CASCADE)
     last_repetition = models.DateTimeField(null=True, blank=True)
     repetition_count = models.PositiveSmallIntegerField(default=0)
+    watched_count = models.PositiveSmallIntegerField(default=0)
     deleted = models.BooleanField(default=False)
     skipped = models.BooleanField(default=False)
 
