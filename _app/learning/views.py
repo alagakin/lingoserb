@@ -164,9 +164,16 @@ class SkipWordAPIView(APIView):
                 user=request.user,
                 word_id=kwargs['word_id']
             )
-            saved_word.skipped = True
-            saved_word.save()
+            if saved_word.skipped:
+                saved_word.skipped = False
+                saved_word.save()
+                return Response(False, status=status.HTTP_204_NO_CONTENT)
+
+            else:
+                saved_word.skipped = True
+                saved_word.save()
+                return Response(True, status=status.HTTP_204_NO_CONTENT)
+
         except SavedWord.DoesNotExist:
             return Response(None, status=status.HTTP_404_NOT_FOUND)
 
-        return Response(None, status=status.HTTP_204_NO_CONTENT)
