@@ -94,16 +94,6 @@ class ProgressAPIView(APIView):
         return Response(data, status=status.HTTP_200_OK)
 
 
-class StartLearningAPIView(APIView):
-    permission_classes = (IsAuthenticated, TopicIsSubtopic)
-
-    def post(self, request, *args, **kwargs):
-        subtopic = Topic.objects.get(id=kwargs['subtopic_id'])
-        topic_to_saved(user=request.user, topic=subtopic)
-
-        return Response(None, status=status.HTTP_204_NO_CONTENT)
-
-
 class WatchedWordAPIView(APIView):
     permission_classes = (IsAuthenticated,)
 
@@ -149,6 +139,10 @@ class LearnTopicAPIView(APIView):
     def get(self, request, *args, **kwargs):
         try:
             topic = Topic.objects.get(id=kwargs['topic_id'])
+
+            #todo: not the best approach
+            topic_to_saved(user=request.user, topic=topic)
+
             saved_words = SavedWord.objects.filter(word__topics__exact=topic,
                                                    skipped=False,
                                                    watched_count=0)[
