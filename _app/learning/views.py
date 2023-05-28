@@ -93,6 +93,7 @@ class ProgressAPIView(APIView):
 
         return Response(data, status=status.HTTP_200_OK)
 
+
 class GetGameAPIView(APIView):
     permission_classes = (IsAuthenticated,)
 
@@ -105,7 +106,7 @@ class GetGameAPIView(APIView):
 
 
 class SuccessRepetitionAPIView(APIView):
-    permission_classes = (UserOwsSavedWord,)
+    permission_classes = (IsAuthenticated, UserOwsSavedWord,)
 
     def patch(self, request, *args, **kwargs):
         saved_word = SavedWord.objects.get(id=kwargs['pk'])
@@ -142,3 +143,18 @@ class StartLearningAPIView(APIView):
                 pass
 
         return Response(None, status=status.HTTP_204_NO_CONTENT)
+
+
+class WatchedWordAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+        try:
+            saved_word = SavedWord.objects.get(word_id=kwargs['word_id'],
+                                               user=request.user)
+        except SavedWord.DoesNotExist:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        saved_word.watched_count += 1
+        saved_word.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
