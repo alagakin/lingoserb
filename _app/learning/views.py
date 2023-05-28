@@ -151,6 +151,7 @@ class WatchedWordAPIView(APIView):
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         saved_word.watched_count += 1
+        saved_word.watched_at = timezone.now()
         saved_word.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
