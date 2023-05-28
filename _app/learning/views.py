@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.core.cache import cache
 from django.db import IntegrityError
 from django.utils import timezone
@@ -9,10 +10,9 @@ from rest_framework.permissions import IsAuthenticated
 from learning.models import SavedWord
 from topics.models import Topic
 from topics.permissions import TopicIsSubtopic
-from words.models import Word
-from words.permissions import UserOwsSavedWord
 from learning.serializers import WordsGameSerializer, SavedWordListSerializer, \
     SaveWordCreateSerializer, SavedWordsIds, ProgressSerializer
+from words.serializers import WordsWithTexts
 from words.services.games import CardsGame
 
 
@@ -177,3 +177,20 @@ class SkipWordAPIView(APIView):
         except SavedWord.DoesNotExist:
             return Response(None, status=status.HTTP_404_NOT_FOUND)
 
+
+class LearnTopicAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, *args, **kwargs):
+        try:
+            topic = Topic.objects.get(id=kwargs['topic_id'])
+            saved_words = SavedWord.objects.filter(word__topics__exact=topic,
+                                                   skipped=False,
+                                                   watched_count=0)[
+                          0:settings.WORDS_PER_ITERATION]
+            words = [saved_word.word for saved_word in saved_words]
+            serialized = WordsWithTexts(words, many=True)
+
+            return Response(serialized.data, status=status.HTTP_200_OK)
+        except Topic.DoesNotExist:
+            return Response(None, status.HTTP_404_NOT_FOUND)

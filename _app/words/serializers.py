@@ -61,3 +61,11 @@ class WordTranslationSerializer(serializers.Serializer):
         representation['topics'] = serialized_topics.data
 
         return representation
+
+
+class WordsWithTexts(WordTranslationSerializer):
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        serialized_texts = TextSerializer(instance.texts, many=True)
+        representation['texts'] = serialized_texts.data
+        return representation
