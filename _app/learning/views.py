@@ -121,16 +121,6 @@ class SuccessRepetitionAPIView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class SkipWordAPIView(APIView):
-    permission_classes = (UserOwsSavedWord,)
-
-    def patch(self, request, *args, **kwargs):
-        saved_word = SavedWord.objects.get(id=kwargs['pk'])
-        saved_word.skipped = not saved_word.skipped
-        saved_word.save()
-        return Response(saved_word.skipped, status=status.HTTP_204_NO_CONTENT)
-
-
 class StartLearningAPIView(APIView):
     permission_classes = (IsAuthenticated, TopicIsSubtopic)
 
@@ -163,3 +153,20 @@ class WatchedWordAPIView(APIView):
         saved_word.watched_count += 1
         saved_word.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class SkipWordAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+        try:
+            saved_word = SavedWord.objects.get(
+                user=request.user,
+                word_id=kwargs['word_id']
+            )
+            saved_word.skipped = True
+            saved_word.save()
+        except SavedWord.DoesNotExist:
+            return Response(None, status=status.HTTP_404_NOT_FOUND)
+
+        return Response(None, status=status.HTTP_204_NO_CONTENT)

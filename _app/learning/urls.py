@@ -20,10 +20,10 @@ urlpatterns = [
     path('saved/progress/',
          ProgressAPIView.as_view(),
          name='saved-progress'),
-    path('saved/<int:pk>/skip/', SkipWordAPIView.as_view(),
-         name='skip-saved-word'),
+    path('learning/<int:word_id>/skip/', SkipWordAPIView.as_view(),
+         name='skip-word'),
     path('learning/<int:subtopic_id>/', StartLearningAPIView.as_view(),
          name='start-learning'),
     path('learning/<int:word_id>/watched/', WatchedWordAPIView.as_view(),
-         name='watched-word')
+         name='watched-word'),
 ]
