@@ -23,6 +23,7 @@ class CardsGame():
 
     def get_words(self):
         return SavedWord.objects.filter(user=self.user,
+                                        skipped=False,
                                         word__topics__exact=self.topic).filter(
             Q(repetition_count__in=[1, 2], last_repetition__lte=one_day_ago) |
             Q(repetition_count__in=[3], last_repetition__lte=three_days_ago) |
