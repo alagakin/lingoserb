@@ -106,10 +106,15 @@ class GetGameAPIView(APIView):
 
 
 class SuccessRepetitionAPIView(APIView):
-    permission_classes = (IsAuthenticated, UserOwsSavedWord,)
+    permission_classes = (IsAuthenticated,)
 
-    def patch(self, request, *args, **kwargs):
-        saved_word = SavedWord.objects.get(id=kwargs['pk'])
+    def post(self, request, *args, **kwargs):
+        try:
+            saved_word = SavedWord.objects.get(word_id=kwargs['word_id'],
+                                               user=request.user)
+        except SavedWord.DoesNotExist:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
         saved_word.repetition_count += 1
         saved_word.last_repetition = timezone.now()
         saved_word.save()
