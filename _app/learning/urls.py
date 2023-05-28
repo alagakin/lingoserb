@@ -1,14 +1,11 @@
 from django.urls import path
 
-from learning.views import GetGameAPIView, SuccessRepetitionAPIView, \
-    SavedWordListAPIView, SavedWordsIDSAPIView, SavedWordCreateAPIView, \
+from learning.views import SavedWordListAPIView, SavedWordsIDSAPIView, \
+    SavedWordCreateAPIView, \
     DestroySavedWordAPIView, ProgressAPIView, SkipWordAPIView, \
     StartLearningAPIView, WatchedWordAPIView, LearnTopicAPIView
 
 urlpatterns = [
-    path('game/', GetGameAPIView.as_view(), name='get-game'),
-    path('game/<int:word_id>/success/', SuccessRepetitionAPIView.as_view(),
-         name='success-repetition'),
     path('saved/', SavedWordListAPIView.as_view(),
          name='saved-word-list'),
     path('saved/ids/', SavedWordsIDSAPIView.as_view(), name='saved-words-ids'),

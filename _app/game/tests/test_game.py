@@ -4,8 +4,9 @@ from django.urls import resolve, reverse
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 
-from learning.views import GetGameAPIView, SuccessRepetitionAPIView
-from words.models import Word, SavedWord, Translation
+from game.views import GetGameAPIView, SuccessRepetitionAPIView
+from learning.models import SavedWord
+from words.models import Word, Translation
 from rest_framework.test import APITestCase
 import json
 
@@ -16,7 +17,7 @@ class TestEndpointsResoled(TestCase):
         self.assertEqual(resolve(url).func.view_class, GetGameAPIView)
 
     def test_success_repetition_resolved(self):
-        url = reverse('success-repetition', kwargs={'pk': 1})
+        url = reverse('success-repetition', kwargs={'word_id': 1})
         self.assertEqual(resolve(url).func.view_class, SuccessRepetitionAPIView)
 
 
@@ -76,14 +77,9 @@ class TestGameActions(APITestCase):
     def test_user_can_interact_with_game(self):
         self.assertEqual(self.saved_word_user_1.repetition_count, 0)
         self.assertIsNone(self.saved_word_user_1.last_repetition)
-        response = self.client.patch(reverse('success-repetition', kwargs={
-            'pk': self.saved_word_user_1.pk}))
+        response = self.client.post(reverse('success-repetition', kwargs={
+            'word_id': self.word_1.pk}))
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(self.user_1.saved.first().repetition_count, 1)
         self.assertIsNotNone(self.user_1.saved.first().last_repetition)
-
-    def test_user_cant_interact_with_not_their_own_words(self):
-        response = self.client.patch(reverse('success-repetition', kwargs={
-            'pk': self.saved_word_user_2.pk}))
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

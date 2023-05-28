@@ -8,7 +8,8 @@ urlpatterns = [
     path('api/v1/', include('words.urls')),
     path('api/v1/', include('accounts.urls')),
     path('api/v1/', include('topics.urls')),
-    path('api/v1/', include('learning.urls'))
+    path('api/v1/', include('learning.urls')),
+    path('api/v1/', include('game.urls'))
 ]
 
 if settings.DEBUG:

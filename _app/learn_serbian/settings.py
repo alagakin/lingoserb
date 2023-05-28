@@ -52,7 +52,8 @@ INSTALLED_APPS = [
     'words',
     'topics',
     'ai',
-    'learning'
+    'learning',
+    'game'
 ]
 
 MIDDLEWARE = [
