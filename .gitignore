@@ -8,3 +8,4 @@ _psql
 # *.env
 _app/static/
 _app/media/
+.idea
