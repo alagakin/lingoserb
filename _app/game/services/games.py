@@ -30,4 +30,4 @@ class CardsGame():
             Q(repetition_count__in=[4], last_repetition__lte=week_ago) |
             Q(repetition_count__gte=5, last_repetition__lte=month_ago) |
             Q(last_repetition=None)
-        ).order_by('repetition_count')[:settings.WORDS_PER_ITERATION]
+        ).order_by('watched_at')[:settings.WORDS_PER_ITERATION]
