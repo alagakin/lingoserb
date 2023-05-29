@@ -13,6 +13,7 @@ class WordGameOptionsSerializer(serializers.Serializer):
 class WordsGameSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     word = serializers.CharField(source='word.title')
+    word_id = serializers.IntegerField(source='word.id')
     last_repetition = serializers.DateTimeField()
     repetition_count = serializers.IntegerField()
     audio_link = serializers.CharField(source='word.audio_link')
