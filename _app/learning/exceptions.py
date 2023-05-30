@@ -1,0 +1,4 @@
+
+
+class EmptyLessonException(BaseException):
+    pass
