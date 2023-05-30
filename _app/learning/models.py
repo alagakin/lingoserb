@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db import models
+from topics.models import Topic
 from words.models import Word
 
 
@@ -42,3 +43,15 @@ class SavedWord(models.Model):
         if self.repetition_count > max_value:
             self.repetition_count = max_value
         super().save(*args, **kwargs)
+
+
+class Lesson(models.Model):
+    user = models.ForeignKey(get_user_model(), related_name='lessons',
+                             on_delete=models.CASCADE)
+    topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
+    saved_words = models.ManyToManyField(SavedWord, related_name='lessons')
+    created_at = models.DateTimeField(auto_now_add=True)
+    finished_at = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return str(self.name) + ' - ' + str(self.user)
