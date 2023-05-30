@@ -54,4 +54,8 @@ class Lesson(models.Model):
     finished_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
-        return str(self.name) + ' - ' + str(self.user)
+        return str(self.topic) + ' - ' + str(self.user)
+    
+    @property
+    def is_complete(self):
+        return self.finished_at is not None 
