@@ -255,3 +255,24 @@ class LearnTopicAPIView(APIView):
         for saved in saved_words:
             lesson.saved_words.add(saved)
         lesson.save()
+
+
+class CompleteLessonAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+        try:
+            topic = Topic.objects.get(id=kwargs["topic_id"])
+            lesson = Lesson.objects.get(user=request.user, topic=topic,
+                                        finished_at=None)
+            for saved_word in lesson.saved_words.all():
+                saved_word.repetition_count += 1
+                saved_word.watched_count += 1
+                saved_word.last_repetition = timezone.now()
+                saved_word.save()
+
+            lesson.finished_at = timezone.now()
+            lesson.save()
+            return Response(None, status.HTTP_200_OK)
+        except (Topic.DoesNotExist, Lesson.DoesNotExist):
+            return Response(None, status.HTTP_404_NOT_FOUND)
