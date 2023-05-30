@@ -51,7 +51,8 @@ class Lesson(models.Model):
         get_user_model(), related_name="lessons", on_delete=models.CASCADE
     )
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
-    saved_words = models.ManyToManyField(SavedWord, related_name="lessons")
+    saved_words = models.ManyToManyField(SavedWord, related_name="lessons",
+                                         null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     finished_at = models.DateTimeField(null=True, blank=True)
 
