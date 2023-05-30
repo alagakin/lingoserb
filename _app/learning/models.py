@@ -15,8 +15,9 @@ class SavedWordsManagerAll(models.Manager):
 
 
 class SavedWord(models.Model):
-    user = models.ForeignKey(get_user_model(), related_name='saved',
-                             on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        get_user_model(), related_name="saved", on_delete=models.CASCADE
+    )
     word = models.ForeignKey(Word, on_delete=models.CASCADE)
     last_repetition = models.DateTimeField(null=True, blank=True)
     repetition_count = models.PositiveSmallIntegerField(default=0)
@@ -27,13 +28,13 @@ class SavedWord(models.Model):
 
     def delete(self, *args, **kwargs):
         self.deleted = True
-        self.save(update_fields=['deleted'])
+        self.save(update_fields=["deleted"])
 
     def __str__(self):
-        return str(self.word) + ' - ' + str(self.user)
+        return str(self.word) + " - " + str(self.user)
 
     class Meta:
-        unique_together = ['user', 'word']
+        unique_together = ["user", "word"]
 
     objects = SavedWordsManager()
     all_objects = SavedWordsManagerAll()
@@ -46,16 +47,17 @@ class SavedWord(models.Model):
 
 
 class Lesson(models.Model):
-    user = models.ForeignKey(get_user_model(), related_name='lessons',
-                             on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        get_user_model(), related_name="lessons", on_delete=models.CASCADE
+    )
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
-    saved_words = models.ManyToManyField(SavedWord, related_name='lessons')
+    saved_words = models.ManyToManyField(SavedWord, related_name="lessons")
     created_at = models.DateTimeField(auto_now_add=True)
     finished_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
-        return str(self.topic) + ' - ' + str(self.user)
-    
+        return str(self.topic) + " - " + str(self.user)
+
     @property
     def is_complete(self):
-        return self.finished_at is not None 
+        return self.finished_at is not None

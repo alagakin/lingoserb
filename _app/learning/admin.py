@@ -4,12 +4,13 @@ from learning.models import Lesson
 
 
 class SavedWordAdmin(admin.ModelAdmin):
-    list_display = ['word', 'user', 'last_repetition', 'repetition_count']
+    list_display = ["word", "user", "last_repetition", "repetition_count"]
 
 
 class LessonAdmin(admin.ModelAdmin):
-    list_display = ['user', 'topic', 'created_at', 'finished_at']
-    readonly_fields = ['created_at']
+    list_display = ["user", "topic", "created_at", "finished_at"]
+    readonly_fields = ["created_at"]
+
 
 admin.site.register(Lesson, LessonAdmin)
 admin.site.register(SavedWord, SavedWordAdmin)
