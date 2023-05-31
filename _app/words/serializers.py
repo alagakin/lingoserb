@@ -11,6 +11,7 @@ class WordSerializer(serializers.ModelSerializer):
 class TextSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     content = serializers.CharField()
+    audio_link = serializers.CharField()
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
