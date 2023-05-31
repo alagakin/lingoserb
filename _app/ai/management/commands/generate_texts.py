@@ -26,58 +26,58 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         openai.api_key = os.getenv('OPENAI_KEY')
+        for i in range(0, 3):
+            words = Word.objects.order_by('-texts')[0:5]
 
-        words = Word.objects.order_by('-texts')[0:5]
+            titles = ['"' + word.title + '"' for word in words]
+            titles = ", ".join(titles)
+            prompt = self.prompt % titles
 
-        titles = ['"' + word.title + '"' for word in words]
-        titles = ", ".join(titles)
-        prompt = self.prompt % titles
+            try:
+                chat_completion = openai.ChatCompletion.create(
+                    model="gpt-3.5-turbo", messages=[
+                        {"role": "user",
+                         "content": prompt}]
+                )
+                sentences = chat_completion['choices'][0]['message']['content']
+                sentences = json.loads(sentences)
+                sentences = sentences['sentences']
 
-        try:
-            chat_completion = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo", messages=[
-                    {"role": "user",
-                     "content": prompt}]
-            )
-            sentences = chat_completion['choices'][0]['message']['content']
-            sentences = json.loads(sentences)
-            sentences = sentences['sentences']
+                for sentence in sentences:
+                    try:
+                        word = Word.objects.get(title=sentence['word'])
+                    except Word.DoesNotExist:
+                        word = Word(
+                            title=sentence['word']
+                        )
+                        word.save()
 
-            for sentence in sentences:
-                try:
-                    word = Word.objects.get(title=sentence['word'])
-                except Word.DoesNotExist:
-                    word = Word(
-                        title=sentence['word']
-                    )
-                    word.save()
+                    try:
+                        text = Text.objects.get(content=sentence['text'])
+                    except Text.DoesNotExist:
+                        text = Text(
+                            content=sentence['text']
+                        )
+                        text.save()
 
-                try:
-                    text = Text.objects.get(content=sentence['text'])
-                except Text.DoesNotExist:
-                    text = Text(
-                        content=sentence['text']
-                    )
-                    text.save()
+                    try:
+                        translation = TextTranslation.objects.get(
+                            content=sentence['translation'],
+                            lang='ru',
+                            text=text
+                        )
+                    except TextTranslation.DoesNotExist:
+                        translation = TextTranslation(
+                            content=sentence['translation'],
+                            lang='ru',
+                            text=text
+                        )
+                        translation.save()
+                    if text not in word.texts.all():
+                        word.texts.add(text)
 
-                try:
-                    translation = TextTranslation.objects.get(
-                        content=sentence['translation'],
-                        lang='ru',
-                        text=text
-                    )
-                except TextTranslation.DoesNotExist:
-                    translation = TextTranslation(
-                        content=sentence['translation'],
-                        lang='ru',
-                        text=text
-                    )
-                    translation.save()
-                if text not in word.texts.all():
-                    word.texts.add(text)
-
-            logger.info(sentences)
-        except KeyError as key_error:
-            logger.error(key_error)
-        except ValueError as value_error:
-            logger.error(value_error)
+                logger.info(sentences)
+            except KeyError as key_error:
+                logger.error(key_error)
+            except ValueError as value_error:
+                logger.error(value_error)
