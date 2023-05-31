@@ -6,7 +6,7 @@ class Achievements:
         self.user = user
 
     def get(self):
-        saved = SavedWord.all_objects.filter(user=self.user)
+        saved = SavedWord.objects.filter(user=self.user)
         achievements = [
             {
                 'id': 1,

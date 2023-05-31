@@ -61,7 +61,7 @@ class SaveWordsFromTopicAPIView(APIView):
                     try:
                         SavedWord.objects.create(user=request.user, word=word)
                     except IntegrityError:
-                        existing_saved_word = SavedWord.all_objects.get(
+                        existing_saved_word = SavedWord.objects.get(
                             user=request.user, word=word)
                         existing_saved_word.deleted = False
                         existing_saved_word.save(update_fields=['deleted'])

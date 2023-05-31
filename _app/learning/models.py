@@ -4,16 +4,6 @@ from topics.models import Topic
 from words.models import Word
 
 
-class SavedWordsManager(models.Manager):
-    def get_queryset(self):
-        return super().get_queryset().filter(deleted=False)
-
-
-class SavedWordsManagerAll(models.Manager):
-    def get_queryset(self):
-        return super().get_queryset()
-
-
 class SavedWord(models.Model):
     user = models.ForeignKey(
         get_user_model(), related_name="saved", on_delete=models.CASCADE
@@ -23,7 +13,6 @@ class SavedWord(models.Model):
     repetition_count = models.PositiveSmallIntegerField(default=0)
     watched_at = models.DateTimeField(null=True, blank=True)
     watched_count = models.PositiveSmallIntegerField(default=0)
-    deleted = models.BooleanField(default=False)
     skipped = models.BooleanField(default=False)
 
     def delete(self, *args, **kwargs):
@@ -35,9 +24,6 @@ class SavedWord(models.Model):
 
     class Meta:
         unique_together = ["user", "word"]
-
-    objects = SavedWordsManager()
-    all_objects = SavedWordsManagerAll()
 
     def save(self, *args, **kwargs):
         max_value = 5

@@ -50,7 +50,7 @@ class SavedWordCreateAPIView(APIView):
             saved_word.save()
             return Response(None, status=status.HTTP_201_CREATED)
         except IntegrityError:
-            saved_word = SavedWord.all_objects.get(
+            saved_word = SavedWord.objects.get(
                 user=request.user, word_id=request.data["word"]
             )
             saved_word.deleted = False
