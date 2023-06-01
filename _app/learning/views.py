@@ -13,16 +13,13 @@ from words.models import Word
 from datetime import datetime, timedelta
 
 from learning.models import Lesson, SavedWord
-from learning.utils import topic_to_saved
 from topics.models import Topic
-from topics.permissions import TopicIsSubtopic
 from learning.serializers import (
     SavedWordListSerializer,
     SaveWordCreateSerializer,
     SavedWordsIds,
-    ProgressSerializer, LessonSerializer,
+    ProgressSerializer, LessonSerializer
 )
-from words.serializers import WordsWithTexts, WordSerializer
 
 
 class SavedWordListAPIView(generics.ListAPIView):
@@ -276,3 +273,4 @@ class CompleteLessonAPIView(APIView):
             return Response(None, status.HTTP_200_OK)
         except (Topic.DoesNotExist, Lesson.DoesNotExist):
             return Response(None, status.HTTP_404_NOT_FOUND)
+
