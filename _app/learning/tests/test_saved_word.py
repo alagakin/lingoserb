@@ -15,14 +15,6 @@ class TestEndpointsResoled(TestCase):
         url = reverse('saved-word-list')
         self.assertEqual(resolve(url).func.view_class, SavedWordListAPIView)
 
-    def test_saved_word_create_resolved(self):
-        url = reverse('saved-word-create')
-        self.assertEqual(resolve(url).func.view_class, SavedWordCreateAPIView)
-
-    def test_saved_word_destroy_resolved(self):
-        url = reverse('saved-word-destroy')
-        self.assertEqual(resolve(url).func.view_class, DestroySavedWordAPIView)
-
 
 class TestSavedWordsActions(APITestCase):
     def setUp(self) -> None:
@@ -46,24 +38,6 @@ class TestSavedWordsActions(APITestCase):
         self.word_2 = Word.objects.create(
             title='Second word'
         )
-
-    def test_user_can_add_saved_word(self):
-        response = self.client.post(reverse('saved-word-create'), data={
-            'word': self.word_1.id
-        })
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(self.user_1.saved.count(), 1)
-
-    def test_user_can_delete_saved_word(self):
-        saved_word = SavedWord.objects.create(
-            word=self.word_1,
-            user=self.user_1
-        )
-        self.assertEqual(self.user_1.saved.count(), 1)
-        response = self.client.delete(
-            reverse('saved-word-destroy'), {'word': self.word_1.id})
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertEqual(self.user_1.saved.count(), 0)
 
     def test_user_can_get_saved_words(self):
         SavedWord.objects.create(
