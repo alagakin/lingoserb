@@ -1,5 +1,5 @@
 from django.urls import path
-from words.views.views import TextForWordAPIView, WordDetailAPIView, \
+from words.views import TextForWordAPIView, WordDetailAPIView, \
     WordsListAPIView
 
 urlpatterns = [

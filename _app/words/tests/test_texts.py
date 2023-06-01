@@ -4,7 +4,7 @@ from django.urls import resolve, reverse
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from words.models import Word, Text
-from words.views.views import WordsListAPIView, WordDetailAPIView, TextForWordAPIView
+from words.views import WordsListAPIView, WordDetailAPIView, TextForWordAPIView
 from rest_framework.test import APITestCase
 
 
