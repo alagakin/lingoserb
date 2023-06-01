@@ -53,7 +53,6 @@ INSTALLED_APPS = [
     'topics',
     'ai',
     'learning',
-    'game',
     'achievements'
 ]
 
