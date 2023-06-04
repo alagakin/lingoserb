@@ -9,8 +9,6 @@ from topics.models import Topic
 from topics.serializers import TopicSerializer, TopicWordsSerializer, \
     TopicTextsSerializer
 from words.models import Word
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
 
 
 class TopicsListAPIView(generics.ListAPIView):
@@ -18,7 +16,6 @@ class TopicsListAPIView(generics.ListAPIView):
     queryset = Topic.objects.filter(parent_id=None)
     serializer_class = TopicSerializer
 
-    @method_decorator(cache_page(60))
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
 
@@ -28,7 +25,6 @@ class RetrieveTopicsAPIView(generics.RetrieveAPIView):
     queryset = Topic.objects.all()
     serializer_class = TopicSerializer
 
-    @method_decorator(cache_page(60))
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
 

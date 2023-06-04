@@ -4,6 +4,7 @@ from django.core.cache import cache
 from accounts.models import CustomUser
 from learning.models import SavedWord
 from topics.models import Topic
+from topics.utils import topic_progress_cache_key
 from words.serializers import WordTranslationSerializer, TextSerializer
 
 
@@ -41,7 +42,7 @@ class SubtopicSerializer(TopicMultilangRepresentation):
 
 # todo: consider skipped words
 def learned_percent(topic: Topic, user: CustomUser):
-    cache_key = f"learned_percent:{topic.id}:{user.id}"
+    cache_key = topic_progress_cache_key(topic.id, user.id)
     cached_result = cache.get(cache_key)
     if cached_result is not None:
         return cached_result
@@ -59,8 +60,7 @@ def learned_percent(topic: Topic, user: CustomUser):
 
     percent = round(total_score / (5 * words_of_topic.count()) * 100)
 
-    # Cache the result
-    cache.set(cache_key, percent, timeout=600)
+    cache.set(cache_key, percent, timeout=3600)
 
     return percent
 

@@ -9,6 +9,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 
 from learning.exceptions import EmptyLessonException
+from topics.utils import clear_topic_progress_cache
 from words.models import Word
 from datetime import datetime, timedelta
 
@@ -270,6 +271,8 @@ class CompleteLessonAPIView(APIView):
 
             lesson.finished_at = timezone.now()
             lesson.save()
+            clear_topic_progress_cache(topic.id, request.user.id)
+
             return Response(None, status.HTTP_200_OK)
         except (Topic.DoesNotExist, Lesson.DoesNotExist):
             return Response(None, status.HTTP_404_NOT_FOUND)
