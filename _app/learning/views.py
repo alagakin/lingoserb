@@ -298,14 +298,18 @@ def get_topic_progress_graph(user):
     now = timezone.now()
 
     tmp = {
-        'lessons_cnt': lessons.filter(finished_at__day=now.day, ).count(),
+        'lessons_cnt': lessons.filter(finished_at__day=now.day,
+                                      finished_at__month=now.month).count(),
         'date': now.strftime('%Y-%m-%d'),
-        'words_cnt': words.filter(last_repetition__day=now.day).count()
+        'words_cnt': words.filter(last_repetition__day=now.day,
+                                  last_repetition__month=now.month).count()
     }
     tmp = GraphSerializer(tmp)
     res[0] = tmp.data
 
-    end_of_day = timezone.make_aware(datetime.combine(now.date(), datetime.max.time()), timezone.get_current_timezone())
+    end_of_day = timezone.make_aware(
+        datetime.combine(now.date(), datetime.max.time()),
+        timezone.get_current_timezone())
     time_remaining = end_of_day - now
 
     cached_year_data = cache.get(f'graph-{user.id}')
@@ -318,15 +322,18 @@ def get_topic_progress_graph(user):
             current = timezone.now() - timedelta(days=i)
             tmp = {
                 'lessons_cnt': lessons.filter(
-                    finished_at__day=current.day, ).count(),
+                    finished_at__day=current.day,
+                    finished_at__month=current.month).count(),
                 'date': current.strftime('%Y-%m-%d'),
                 'words_cnt': words.filter(
-                    last_repetition__day=current.day).count()
+                    last_repetition__day=current.day,
+                    last_repetition__month=current.month).count()
             }
             tmp = GraphSerializer(tmp)
             year_data[i] = tmp.data
 
         cache.set(f'graph-{user.id}', year_data, time_remaining.total_seconds())
+
         res.update(year_data)
 
     return res
