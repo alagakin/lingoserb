@@ -2,7 +2,7 @@ from django.urls import path
 
 from learning.views import SavedWordListAPIView, SavedWordsIDSAPIView, \
     DestroySavedWordAPIView, ProgressAPIView, SkipWordAPIView, \
-    LearnTopicAPIView, CompleteLessonAPIView
+    LearnTopicAPIView, CompleteLessonAPIView, GetGraphAPIView
 
 urlpatterns = [
     path('saved/', SavedWordListAPIView.as_view(),
@@ -20,4 +20,7 @@ urlpatterns = [
          name='learn-topic'),
     path('learning/<int:topic_id>/complete/', CompleteLessonAPIView.as_view(),
          name='complete-lesson'),
+    path('learning/graph/', GetGraphAPIView.as_view(),
+         name='graph'),
+
 ]

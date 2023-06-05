@@ -96,3 +96,9 @@ class WordsGameSerializer(serializers.Serializer):
         representation['options'] = options.data
 
         return representation
+
+
+class GraphSerializer(serializers.Serializer):
+    date = serializers.DateField()
+    lessons_cnt = serializers.IntegerField()
+    words_cnt = serializers.IntegerField()

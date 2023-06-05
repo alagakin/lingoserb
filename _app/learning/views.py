@@ -7,6 +7,7 @@ from rest_framework import status, generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
+from django.core.cache import cache
 
 from learning.exceptions import EmptyLessonException
 from topics.utils import clear_topic_progress_cache
@@ -19,7 +20,7 @@ from learning.serializers import (
     SavedWordListSerializer,
     SaveWordCreateSerializer,
     SavedWordsIds,
-    ProgressSerializer, LessonSerializer
+    ProgressSerializer, LessonSerializer, GraphSerializer
 )
 
 
@@ -206,7 +207,7 @@ class LearnTopicAPIView(APIView):
 
         return SavedWord.objects.filter(user=user, skipped=False,
                                         word__topics__exact=topic) \
-            .filter(
+                   .filter(
             Q(repetition_count__in=[1, 2], last_repetition__lte=one_day_ago) |
             Q(repetition_count__in=[3], last_repetition__lte=three_days_ago) |
             Q(repetition_count__in=[4], last_repetition__lte=week_ago) |
@@ -277,3 +278,55 @@ class CompleteLessonAPIView(APIView):
         except (Topic.DoesNotExist, Lesson.DoesNotExist):
             return Response(None, status.HTTP_404_NOT_FOUND)
 
+
+class GetGraphAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, *args, **kwargs):
+        try:
+            graph = get_topic_progress_graph(request.user)
+            return Response(graph, status.HTTP_200_OK)
+        except Topic.DoesNotExist:
+            return Response(None, status.HTTP_404_NOT_FOUND)
+
+
+def get_topic_progress_graph(user):
+    res = {}
+    lessons = Lesson.objects.filter(user=user, finished_at__isnull=False)
+    words = SavedWord.objects.filter(user=user, skipped=False,
+                                     repetition_count__gte=settings.REPETITIONS_TO_COMPLETE)
+    now = timezone.now()
+
+    tmp = {
+        'lessons_cnt': lessons.filter(finished_at__day=now.day, ).count(),
+        'date': now.strftime('%Y-%m-%d'),
+        'words_cnt': words.filter(last_repetition__day=now.day).count()
+    }
+    tmp = GraphSerializer(tmp)
+    res[0] = tmp.data
+
+    end_of_day = timezone.make_aware(datetime.combine(now.date(), datetime.max.time()), timezone.get_current_timezone())
+    time_remaining = end_of_day - now
+
+    cached_year_data = cache.get(f'graph-{user.id}')
+
+    if cached_year_data:
+        res.update(cached_year_data)
+    else:
+        year_data = {}
+        for i in range(1, 365):
+            current = timezone.now() - timedelta(days=i)
+            tmp = {
+                'lessons_cnt': lessons.filter(
+                    finished_at__day=current.day, ).count(),
+                'date': current.strftime('%Y-%m-%d'),
+                'words_cnt': words.filter(
+                    last_repetition__day=current.day).count()
+            }
+            tmp = GraphSerializer(tmp)
+            year_data[i] = tmp.data
+
+        cache.set(f'graph-{user.id}', year_data, time_remaining.total_seconds())
+        res.update(year_data)
+
+    return res
