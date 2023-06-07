@@ -76,9 +76,10 @@ class WordsGameSerializer(serializers.Serializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
 
+        topic = instance.word.topics.first()
         # todo lang
-        # todo random is too bad, need to get words from the same Topic
-        incorrect_translations = Translation.objects.filter(lang='ru').exclude(
+        incorrect_translations = Translation.objects.filter(lang='ru',
+                                                            word__topics__exact=topic).exclude(
             word__id=instance.word.id).order_by('?')[:3]
 
         for obj in incorrect_translations:
