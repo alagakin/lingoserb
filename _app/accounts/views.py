@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from accounts.serializers import ProfileSerializer
+from accounts.serializers import ProfileSerializer, GetProfileSerializer
 
 
 class ProfileView(APIView):
@@ -22,5 +22,5 @@ class ProfileView(APIView):
 
     def get(self, request):
         profile = get_user_model().objects.get(id=request.user.id)
-        serializer = ProfileSerializer(profile)
+        serializer = GetProfileSerializer(profile, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
