@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 from accounts.serializers import ProfileSerializer
 
 
-class ProfileUpdateView(APIView):
+class ProfileView(APIView):
     parser_classes = (MultiPartParser, FormParser)
     permission_classes = (IsAuthenticated,)
 
@@ -19,3 +19,8 @@ class ProfileUpdateView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request):
+        profile = get_user_model().objects.get(id=request.user.id)
+        serializer = ProfileSerializer(profile)
+        return Response(serializer.data, status=status.HTTP_200_OK)
