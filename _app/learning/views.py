@@ -31,6 +31,12 @@ class SavedWordListAPIView(generics.ListAPIView):
     def get_queryset(self):
         user_id = self.request.user.id
         queryset = SavedWord.objects.filter(user_id=user_id)
+
+        topic_ids = self.request.query_params.getlist('topics')
+
+        if topic_ids:
+            queryset = queryset.filter(word__topics__in=topic_ids)
+
         return queryset
 
 
