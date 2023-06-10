@@ -6,13 +6,7 @@ from rest_framework import serializers
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ('picture', 'lang', )
-
-
-class GetProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = get_user_model()
-        fields = ('picture', 'lang', )
+        fields = ('picture', 'lang',)
 
     def get_picture(self, obj):
         request = self.context.get('request')
@@ -27,4 +21,3 @@ class GetProfileSerializer(serializers.ModelSerializer):
             return picture_url
         else:
             return None
-

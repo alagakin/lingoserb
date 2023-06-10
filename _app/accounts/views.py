@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from accounts.serializers import ProfileSerializer, GetProfileSerializer
+from accounts.serializers import ProfileSerializer
 
 
 class ProfileView(APIView):
@@ -14,7 +14,8 @@ class ProfileView(APIView):
 
     def patch(self, request):
         profile = get_user_model().objects.get(id=request.user.id)
-        serializer = ProfileSerializer(profile, data=request.data)
+        serializer = ProfileSerializer(profile, data=request.data,
+                                       context={'request': request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -22,5 +23,5 @@ class ProfileView(APIView):
 
     def get(self, request):
         profile = get_user_model().objects.get(id=request.user.id)
-        serializer = GetProfileSerializer(profile, context={'request': request})
+        serializer = ProfileSerializer(profile, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
