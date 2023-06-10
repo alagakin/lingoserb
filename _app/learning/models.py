@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
 from topics.models import Topic
@@ -14,6 +15,11 @@ class SavedWord(models.Model):
     watched_at = models.DateTimeField(null=True, blank=True)
     watched_count = models.PositiveSmallIntegerField(default=0)
     skipped = models.BooleanField(default=False)
+
+    @property
+    def learned_percent(self):
+        return round(self.repetition_count /
+                     settings.REPETITIONS_TO_COMPLETE * 100)
 
     def delete(self, *args, **kwargs):
         self.deleted = True

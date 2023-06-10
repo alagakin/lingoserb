@@ -19,6 +19,7 @@ class SavedWordsIds(serializers.Serializer):
 
 class SavedWordListSerializer(serializers.ModelSerializer):
     word = WordTranslationSerializer(read_only=True)
+    learned_percent = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = SavedWord
