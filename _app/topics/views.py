@@ -20,6 +20,16 @@ class TopicsListAPIView(generics.ListAPIView):
         return super().get(request, *args, **kwargs)
 
 
+class SubtopicListAPIView(generics.ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    queryset = Topic.objects.filter(parent_id__isnull=False)
+    serializer_class = TopicSerializer
+
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
+
+
 class RetrieveTopicsAPIView(generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = Topic.objects.all()

@@ -1,11 +1,14 @@
 from django.urls import path
 
 from topics.views import TopicsListAPIView, RetrieveTopicsAPIView, \
-    TopicWordsAPIView, TopicTextsAPIView, SaveWordsFromTopicAPIView
+    TopicWordsAPIView, TopicTextsAPIView, SaveWordsFromTopicAPIView, \
+    SubtopicListAPIView
 
 urlpatterns = [
     path('topic/', TopicsListAPIView.as_view(),
          name='topic-list-view'),
+    path('subtopic/', SubtopicListAPIView.as_view(),
+         name='subtopic-list-view'),
     path('topic/<int:pk>/', RetrieveTopicsAPIView.as_view(),
          name='topic-retrieve-view'),
     path('topic/<int:pk>/words/', TopicWordsAPIView.as_view(),
