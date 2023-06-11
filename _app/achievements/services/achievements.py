@@ -46,8 +46,9 @@ class Achievements:
         self.user = user
 
     def get(self):
-        saved = SavedWord.objects.filter(user=self.user)
-        lessons = Lesson.objects.filter(user=self.user)
+        saved = SavedWord.objects.filter(user=self.user, skipped=False)
+        lessons = Lesson.objects.filter(user=self.user,
+                                        finished_at__isnull=False)
         achievements = [
             {
                 'id': 1,
