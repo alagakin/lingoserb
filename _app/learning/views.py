@@ -1,7 +1,6 @@
 from django.conf import settings
 from django.core.cache import cache
 from django.db import IntegrityError
-from django.db.models import Q
 from django.utils import timezone
 from rest_framework import status, generics
 from rest_framework.response import Response
@@ -23,6 +22,9 @@ from learning.serializers import (
     ProgressSerializer, LessonSerializer, GraphSerializer
 )
 
+from django.db.models import Q
+import logging
+logger = logging.getLogger('openai')
 
 class SavedWordListAPIView(generics.ListAPIView):
     serializer_class = SavedWordListSerializer
@@ -34,8 +36,18 @@ class SavedWordListAPIView(generics.ListAPIView):
 
         topic_ids = self.request.query_params.getlist('topics')
 
-        if topic_ids:
+        if topic_ids and topic_ids[0] != '':
+            topic_ids = topic_ids[0].split(',')
             queryset = queryset.filter(word__topics__in=topic_ids)
+
+        progress = self.request.query_params.getlist('progress')
+
+        if progress and progress[0] != '':
+            progress = progress[0].split(',')
+            repetitions = [int(learned) / 100 * 5 for learned in progress]
+            queryset = queryset.filter(repetition_count__in=repetitions)
+
+        queryset = queryset.order_by('-repetition_count')
 
         return queryset
 

@@ -1,3 +1,6 @@
+from django.conf import settings
+
+
 def transliterate(text: str) -> str:
     pairs = {
         'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'ђ': 'đ', 'е': 'e',
@@ -23,3 +26,8 @@ def transliterate(text: str) -> str:
             latin_text += char
 
     return latin_text
+
+
+def learned_percent(saved_word) -> int:
+    return round(
+        saved_word.repetition_count / settings.REPETITIONS_TO_COMPLETE * 100)

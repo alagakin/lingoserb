@@ -1,6 +1,8 @@
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
+
+from learn_serbian.utils import learned_percent
 from topics.models import Topic
 from words.models import Word
 
@@ -18,8 +20,7 @@ class SavedWord(models.Model):
 
     @property
     def learned_percent(self):
-        return round(self.repetition_count /
-                     settings.REPETITIONS_TO_COMPLETE * 100)
+        return learned_percent(self)
 
     def delete(self, *args, **kwargs):
         self.deleted = True
