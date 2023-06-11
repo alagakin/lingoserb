@@ -39,3 +39,13 @@ class WordsListAPIView(generics.ListAPIView):
     queryset = Word.objects.all()
     permission_classes = (IsAuthenticated,)
 
+    def get_queryset(self):
+        queryset = Word.objects.all()
+
+        topic_ids = self.request.query_params.getlist('topics')
+
+        if topic_ids and topic_ids[0] != '':
+            topic_ids = topic_ids[0].split(',')
+            queryset = queryset.filter(topics__in=topic_ids)
+
+        return queryset
