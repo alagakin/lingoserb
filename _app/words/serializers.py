@@ -51,15 +51,19 @@ class WordTranslationSerializer(serializers.Serializer):
         from topics.serializers import TopicsForWordSerializer
 
         representation = super().to_representation(instance)
-        # todo lang
-        translations = instance.translations.filter(lang='ru')
         topics = instance.topics.all()
-        serialized_translations = TranslationsForWordSerializer(translations,
-                                                                many=True)
         serialized_topics = TopicsForWordSerializer(topics,
                                                     many=True)
-        representation['translation'] = serialized_translations.data
+
         representation['topics'] = serialized_topics.data
+
+        request = self.context.get('request')
+        if request.LANGUAGE_CODE == 'ru':
+            representation['translation'] = TranslationsForWordSerializer(
+                instance.translations.filter(lang='ru'), many=True).data
+        else:
+            representation['translation'] = TranslationsForWordSerializer(
+                instance.translations.filter(lang='en'), many=True).data
 
         return representation
 
