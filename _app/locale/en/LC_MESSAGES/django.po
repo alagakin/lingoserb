@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-12 16:05+0200\n"
+"POT-Creation-Date: 2023-06-12 14:32+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,62 +17,63 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
 #: achievements/services/achievements.py:55
-msgid "5_words.title"
+msgid "5_words"
 msgstr "5 words"
 
 #: achievements/services/achievements.py:60
-msgid "10_words.title"
+msgid "10_words"
 msgstr "10 words"
 
 #: achievements/services/achievements.py:66
-msgid "50_words.title"
+msgid "50_words"
 msgstr "50 words"
 
 #: achievements/services/achievements.py:72
-msgid "250_words.title"
+msgid "250_words"
 msgstr "250 words"
 
 #: achievements/services/achievements.py:79
-msgid "1000_words.title"
+msgid "1000_words"
 msgstr "1000 words"
 
 #: achievements/services/achievements.py:85
-msgid "5000_words.title"
+msgid "5000_words"
 msgstr "5000 words"
 
 #: achievements/services/achievements.py:91
-msgid "achievements.1_lessons.title"
+msgid "1_lessons"
 msgstr "1 lesson"
 
 #: achievements/services/achievements.py:97
-msgid "achievements.5_lessons.title"
+msgid "5_lessons"
 msgstr "5 lessons"
 
 #: achievements/services/achievements.py:103
-msgid "achievements.10_lessons.title"
+msgid "10_lessons"
 msgstr "10 lessons"
 
 #: achievements/services/achievements.py:109
-msgid "achievements.50_lessons.title"
+msgid "50_lessons"
 msgstr "50 lessons"
 
 #: achievements/services/achievements.py:115
-msgid "achievements.100_lessons.title"
+msgid "100_lessons"
 msgstr "100 lessons"
 
 #: achievements/services/achievements.py:121
-msgid "achievements.500_lessons.title"
+msgid "500_lessons"
 msgstr "500 lessons"
 
 #: achievements/services/achievements.py:127
-msgid "achievements.1000_lessons.title"
+msgid "1000_lessons"
 msgstr "1000 lessons"
 
 #: achievements/services/achievements.py:133
-msgid "achievements.5000_lessons.title"
+msgid "5000_lessons"
 msgstr "5000 lessons"
 
 #: achievements/services/achievements.py:139
-msgid "achievements.10000_lessons.title"
+msgid "10000_lessons"
 msgstr "10000 lessons"
