@@ -1,7 +1,7 @@
 from django.conf import settings
 
 from learning.models import SavedWord, Lesson
-
+from django.utils.translation import gettext as _
 
 def calc_n_words(saved, n):
     studies = 0
@@ -52,91 +52,91 @@ class Achievements:
         achievements = [
             {
                 'id': 1,
-                'title': '5 words',
+                'title': _('5_words.title'),
                 'achieved': calc_n_words(saved, 5)
             },
             {
                 'id': 2,
-                'title': '10 words',
+                'title': _('10_words.title'),
                 'achieved': calc_n_words(saved, 10),
                 'percent': calc_words_percent(saved, 10)
             },
             {
                 'id': 3,
-                'title': '50 words',
+                'title': _('50_words.title'),
                 'achieved': calc_n_words(saved, 50),
                 'percent': calc_words_percent(saved, 50),
             },
             {
                 'id': 4,
-                'title': '250 words',
+                'title': _('250_words.title'),
                 'achieved': calc_n_words(saved, 250),
                 'percent': calc_words_percent(saved, 250),
 
             },
             {
                 'id': 5,
-                'title': '1000 words',
+                'title': _('1000_words.title'),
                 'achieved': calc_n_words(saved, 1000),
                 'percent': calc_words_percent(saved, 1000),
             },
             {
                 'id': 6,
-                'title': '5000 words',
+                'title': _('5000_words.title'),
                 'achieved': calc_n_words(saved, 5000),
                 'percent': calc_words_percent(saved, 5000),
             },
             {
                 'id': 7,
-                'title': '1 lesson',
+                'title': _('achievements.1_lessons.title'),
                 'achieved': calc_n_lessons(lessons, 1),
                 'percent': calc_lessons_percent(lessons, 1),
             },
             {
                 'id': 8,
-                'title': '5 lessons',
+                'title': _('achievements.5_lessons.title'),
                 'achieved': calc_n_lessons(lessons, 5),
                 'percent': calc_lessons_percent(lessons, 5),
             },
             {
                 'id': 9,
-                'title': '10 lessons',
+                'title': _('achievements.10_lessons.title'),
                 'achieved': calc_n_lessons(lessons, 10),
                 'percent': calc_lessons_percent(lessons, 10),
             },
             {
                 'id': 10,
-                'title': '50 lessons',
+                'title': _('achievements.50_lessons.title'),
                 'achieved': calc_n_lessons(lessons, 50),
                 'percent': calc_lessons_percent(lessons, 50),
             },
             {
                 'id': 11,
-                'title': '100 lessons',
+                'title': _('achievements.100_lessons.title'),
                 'achieved': calc_n_lessons(lessons, 100),
                 'percent': calc_lessons_percent(lessons, 100),
             },
             {
                 'id': 12,
-                'title': '500 lessons',
+                'title': _('achievements.500_lessons.title'),
                 'achieved': calc_n_lessons(lessons, 500),
                 'percent': calc_lessons_percent(lessons, 500),
             },
             {
                 'id': 13,
-                'title': '1000 lessons',
+                'title': _('achievements.1000_lessons.title'),
                 'achieved': calc_n_lessons(lessons, 1000),
                 'percent': calc_lessons_percent(lessons, 1000),
             },
             {
                 'id': 14,
-                'title': '5000 lessons',
+                'title': _('achievements.5000_lessons.title'),
                 'achieved': calc_n_lessons(lessons, 5000),
                 'percent': calc_lessons_percent(lessons, 5000),
             },
             {
                 'id': 15,
-                'title': '10000 lessons',
+                'title': _('achievements.10000_lessons.title'),
                 'achieved': calc_n_lessons(lessons, 10000),
                 'percent': calc_lessons_percent(lessons, 10000),
             }
