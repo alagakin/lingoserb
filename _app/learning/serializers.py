@@ -80,15 +80,20 @@ class WordsGameSerializer(serializers.Serializer):
         representation = super().to_representation(instance)
         request = self.context.get('request')
         topic = instance.word.topics.first()
-        # todo lang
-        incorrect_translations = Translation.objects.filter(lang='ru',
+
+        if request and request.LANGUAGE_CODE:
+            lang_code = request.LANGUAGE_CODE
+        else:
+            lang_code = 'en'
+
+        incorrect_translations = Translation.objects.filter(lang=lang_code,
                                                             word__topics__exact=topic).exclude(
             word__id=instance.word.id).order_by('?')[:3]
 
         for obj in incorrect_translations:
             obj.correct = False
 
-        correct_translation = Translation.objects.filter(lang='ru').filter(
+        correct_translation = Translation.objects.filter(lang=lang_code).filter(
             word__id=instance.word.id).first()
         correct_translation.correct = True
 
