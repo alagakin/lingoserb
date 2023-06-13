@@ -48,16 +48,17 @@ class WordTranslationSerializer(serializers.Serializer):
     audio_link = serializers.CharField()
 
     def to_representation(self, instance):
-        from topics.serializers import TopicsForWordSerializer
+        from topics.serializers import SubtopicSerializer
+        request = self.context.get('request')
 
         representation = super().to_representation(instance)
         topics = instance.topics.all()
-        serialized_topics = TopicsForWordSerializer(topics,
-                                                    many=True)
+        serialized_topics = SubtopicSerializer(topics,
+                                               many=True,
+                                               context={'request': request})
 
         representation['topics'] = serialized_topics.data
 
-        request = self.context.get('request')
         if request.LANGUAGE_CODE == 'ru':
             representation['translation'] = TranslationsForWordSerializer(
                 instance.translations.filter(lang='ru'), many=True).data

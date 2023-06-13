@@ -8,11 +8,6 @@ from topics.utils import topic_progress_cache_key
 from words.serializers import WordTranslationSerializer, TextSerializer
 
 
-class TopicsForWordSerializer(serializers.Serializer):
-    id = serializers.IntegerField()
-    title = serializers.CharField()
-
-
 # todo: consider skipped words
 def learned_percent(topic: Topic, user: CustomUser):
     cache_key = topic_progress_cache_key(topic.id, user.id)
