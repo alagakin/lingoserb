@@ -16,7 +16,8 @@ class TextForWordAPIView(APIView):
         except Word.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        serialized = TextsOfWithWordSerializer(word)
+        serialized = TextsOfWithWordSerializer(word,
+                                               context={'request': request})
         if not serialized.data:
             return Response(status=status.HTTP_404_NOT_FOUND)
 

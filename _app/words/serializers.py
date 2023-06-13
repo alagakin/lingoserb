@@ -15,20 +15,26 @@ class TextSerializer(serializers.Serializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        # todo lang
-        try:
-            translation = TextTranslation.objects.get(text=instance,
-                                                      lang='ru').content
-        except TextTranslation.DoesNotExist:
-            translation = None
+        request = self.context.get('request')
+        if request.LANGUAGE_CODE:
+            try:
+                translation = TextTranslation.objects.get(text=instance,
+                                                          lang=request.LANGUAGE_CODE).content
+            except TextTranslation.DoesNotExist:
+                translation = None
 
-        representation['translation'] = translation
+            representation['translation'] = translation
         return representation
 
 
 class TextsOfWithWordSerializer(serializers.ModelSerializer):
     title = serializers.CharField()
     texts = TextSerializer(many=True, read_only=True)
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.context.get('request')
+        return context
 
     class Meta:
         model = Word
