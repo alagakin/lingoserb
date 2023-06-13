@@ -3,7 +3,7 @@ from django.core.cache import cache
 
 from accounts.models import CustomUser
 from learning.models import SavedWord
-from topics.models import Topic
+from topics.models import Topic, TopicTranslation
 from topics.utils import topic_progress_cache_key
 from words.serializers import WordTranslationSerializer, TextSerializer
 
@@ -11,33 +11,6 @@ from words.serializers import WordTranslationSerializer, TextSerializer
 class TopicsForWordSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     title = serializers.CharField()
-
-
-class TopicMultilangRepresentation(serializers.ModelSerializer):
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        ru = instance.translations.filter(lang='ru').first()
-        en = instance.translations.filter(lang='en').first()
-        if en:
-            representation['title_en'] = en.title
-
-        if ru:
-            representation['title_ru'] = ru.title
-
-        return representation
-
-
-class SubtopicSerializer(TopicMultilangRepresentation):
-    class Meta:
-        model = Topic
-        fields = ('id', 'title', 'description', 'picture', 'words_count')
-
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        representation['learned_percent'] = learned_percent(instance,
-                                                            self.context[
-                                                                'request'].user)
-        return representation
 
 
 # todo: consider skipped words
@@ -65,12 +38,56 @@ def learned_percent(topic: Topic, user: CustomUser):
     return percent
 
 
-class TopicSerializer(TopicMultilangRepresentation):
+class SubtopicSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Topic
+        fields = ('id', 'title', 'description', 'picture', 'words_count')
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['learned_percent'] = learned_percent(instance,
+                                                            self.context[
+                                                                'request'].user)
+        request = self.context['request']
+
+        if request.LANGUAGE_CODE:
+            translation = instance.translations.filter(
+                lang=request.LANGUAGE_CODE).all()
+            serialized_translations = TopicTranslationSerializer(translation,
+                                                                 many=True)
+            representation['translation'] = serialized_translations.data
+
+        return representation
+
+
+class TopicSerializer(serializers.ModelSerializer):
     subtopics = SubtopicSerializer(many=True)
 
     class Meta:
         model = Topic
         fields = ('id', 'title', 'description', 'picture', 'subtopics')
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.context['request']
+        return context
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        request = self.context['request']
+        if request.LANGUAGE_CODE:
+            translation = instance.translations.filter(
+                lang=request.LANGUAGE_CODE).all()
+            serialized_translations = TopicTranslationSerializer(translation,
+                                                                 many=True)
+            representation['translation'] = serialized_translations.data
+        return representation
+
+
+class TopicTranslationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TopicTranslation
+        fields = '__all__'
 
 
 class TopicWordsSerializer(serializers.Serializer):

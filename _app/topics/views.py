@@ -19,6 +19,11 @@ class TopicsListAPIView(generics.ListAPIView):
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
+
 
 class SubtopicListAPIView(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
