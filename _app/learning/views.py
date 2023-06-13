@@ -172,7 +172,7 @@ class LearnTopicAPIView(APIView):
                 lesson.delete()
                 raise EmptyLessonException
 
-            serialized = LessonSerializer(lesson)
+            serialized = LessonSerializer(lesson, context={"request": request})
             return Response(serialized.data,
                             status=status.HTTP_200_OK)
         except (Lesson.DoesNotExist, EmptyLessonException):
@@ -203,7 +203,7 @@ class LearnTopicAPIView(APIView):
                                                  saved_words, lesson,
                                                  request.user)
 
-            serialized = LessonSerializer(lesson)
+            serialized = LessonSerializer(lesson, context={"request": request})
 
             return Response(serialized.data,
                             status=status.HTTP_200_OK)

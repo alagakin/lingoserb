@@ -16,7 +16,7 @@ class TextSerializer(serializers.Serializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         request = self.context.get('request')
-        if request.LANGUAGE_CODE:
+        if request and request.LANGUAGE_CODE:
             try:
                 translation = TextTranslation.objects.get(text=instance,
                                                           lang=request.LANGUAGE_CODE).content
@@ -78,6 +78,7 @@ class WordTranslationSerializer(serializers.Serializer):
 class WordsWithTexts(WordTranslationSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        serialized_texts = TextSerializer(instance.texts, many=True)
+        request = self.context.get('request')
+        serialized_texts = TextSerializer(instance.texts, many=True, context={'request': request})
         representation['texts'] = serialized_texts.data
         return representation

@@ -47,11 +47,13 @@ class LessonSerializer(serializers.Serializer):
         for_watching = [word.word for word in instance.saved_words.all() if
                         word.watched_count == 0]
 
-        leaning_serialized = WordsWithTexts(for_watching, many=True)
+        request = self.context.get('request')
+        leaning_serialized = WordsWithTexts(for_watching, many=True,
+                                            context={'request': request})
         representation['learning'] = leaning_serialized.data
 
         game_serialized = WordsGameSerializer(
-            instance.saved_words.all(), many=True
+            instance.saved_words.all(), many=True, context={'request': request}
         )
 
         representation['game'] = game_serialized.data
@@ -76,7 +78,7 @@ class WordsGameSerializer(serializers.Serializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-
+        request = self.context.get('request')
         topic = instance.word.topics.first()
         # todo lang
         incorrect_translations = Translation.objects.filter(lang='ru',
@@ -93,7 +95,7 @@ class WordsGameSerializer(serializers.Serializer):
         options = list(incorrect_translations)
         options.append(correct_translation)
         random.shuffle(options)
-        options = WordGameOptionsSerializer(options, many=True)
+        options = WordGameOptionsSerializer(options, many=True, context={'request': request})
 
         representation['options'] = options.data
 
