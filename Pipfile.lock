@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "1a02b44e1e5c1ab127a260dad0a996fc2aaabbad8e2790bcc631b3e3bf56fd4d"
+            "sha256": "721204359f4559c25df909db4263ea5ce60ac43ff19a23bc7309a333db41408c"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -127,6 +127,7 @@
                 "sha256:2163e1640ddb52b7a8c80d0a67a08587e5d245cc9c553a74a847056bc2976b15",
                 "sha256:8ca1e4fcf50d07413d66d1a5e416e42cfdf5851c981d679a09851a6853383b3c"
             ],
+            "markers": "python_full_version <= '3.11.2'",
             "version": "==4.0.2"
         },
         "attrs": {
@@ -446,6 +447,13 @@
             ],
             "version": "==0.7.1"
         },
+        "dj-rest-auth": {
+            "hashes": [
+                "sha256:ec87f934c83b520217399f4793506e36cccccc84e899623510ee9c7289f80573"
+            ],
+            "index": "pypi",
+            "version": "==4.0.1"
+        },
         "django": {
             "hashes": [
                 "sha256:2a6b6fbff5b59dd07bef10bcb019bee2ea97a30b2a656d51346596724324badf",
@@ -453,6 +461,13 @@
             ],
             "index": "pypi",
             "version": "==4.2.2"
+        },
+        "django-allauth": {
+            "hashes": [
+                "sha256:120e265f802b65738899c6cb627b827fde46a4d03067034c633f516c2adf3e3e"
+            ],
+            "index": "pypi",
+            "version": "==0.54.0"
         },
         "django-cors-headers": {
             "hashes": [
@@ -1146,7 +1161,6 @@
                 "sha256:0347ca4cd23ea9d15a665da9d22950552fb66b95600e6c2ebae38ca883b3a4ed",
                 "sha256:4a5dae406f3874b4003708ff120c02cb1a4c8eeead56cd163646347309fcd0f8"
             ],
-            "index": "pypi",
             "version": "==5.2.0"
         },
         "social-auth-core": {
@@ -1154,7 +1168,6 @@
                 "sha256:9791d7c7aee2ac8517fe7a2ea2f942a8a5492b3a4ccb44a9b0dacc87d182f2aa",
                 "sha256:ea7a19c46b791b767e95f467881b53c5fd0d1efb40048d9ed3dbc46daa05c954"
             ],
-            "index": "pypi",
             "version": "==4.4.2"
         },
         "sqlparse": {
