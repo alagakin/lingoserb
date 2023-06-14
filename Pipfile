@@ -21,6 +21,8 @@ pillow = "*"
 openai = "*"
 gTTS = "*"
 boto3 = "*"
+social-auth-core = "*"
+social-auth-app-django = "*"
 
 [dev-packages]
 black = "*"
