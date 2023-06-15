@@ -35,7 +35,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 DEBUG = os.getenv('DEBUG', False) == 'true'
 
 # Enable traffic and form submissions from localhost and PROD_HOST_NAME
-ALLOWED_HOSTS = ['localhost']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 CSRF_TRUSTED_ORIGINS = ['http://localhost']
 
 PROD_HOST_NAME = os.getenv('PROD_HOST_NAME', None)
@@ -43,6 +43,7 @@ if PROD_HOST_NAME:
     ALLOWED_HOSTS.append(PROD_HOST_NAME)
     CSRF_TRUSTED_ORIGINS.append(f'https://{PROD_HOST_NAME}')
 
+GOOGLE_CALLBACK_URL = 'http://127.0.0.1'
 # Application definition
 
 INSTALLED_APPS = [
@@ -53,17 +54,47 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "whitenoise.runserver_nostatic",
+    'django.contrib.sites',
     'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
+    'dj_rest_auth',
     'djoser',
     'accounts',
     'words',
     'topics',
     'ai',
     'learning',
-    'achievements'
+    'achievements',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'dj_rest_auth.registration',
+
 ]
+
+SOCIALACCOUNT_PROVIDERS = {
+    "google": {
+        "APP": {
+            "client_id": os.getenv('GOOGLE_CLIENT_ID'),
+            "secret": os.getenv('GOOGLE_CLIENT_SECRET'),
+            "key": "",
+        },
+        "SCOPE": [
+            "profile",
+            "email",
+        ],
+        "AUTH_PARAMS": {
+            "access_type": "online",
+        },
+        "VERIFIED_EMAIL": True,
+    },
+}
+SOCIALACCOUNT_AUTO_SIGNUP = True
+SOCIALACCOUNT_QUERY_EMAIL = True
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

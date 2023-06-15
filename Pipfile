@@ -22,7 +22,8 @@ openai = "*"
 gTTS = "*"
 boto3 = "*"
 django-allauth = "*"
-dj-rest-auth = "*"
+dj-rest-auth = {version = "*", extras = ["with_social"]}
+drf-yasg = "*"
 
 [dev-packages]
 black = "*"

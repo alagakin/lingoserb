@@ -45,6 +45,8 @@ services:
       - S3_SECRET_ACCESS_KEY
       - S3_BUCKET_NAME
       - S3_REGION
+      - GOOGLE_CLIENT_ID
+      - GOOGLE_CLIENT_SECRET
 
 volumes:
   database_volume:
