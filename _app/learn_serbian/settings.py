@@ -35,7 +35,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 DEBUG = os.getenv('DEBUG', False) == 'true'
 
 # Enable traffic and form submissions from localhost and PROD_HOST_NAME
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '127.0.0.1:5173']
 CSRF_TRUSTED_ORIGINS = ['http://localhost']
 
 PROD_HOST_NAME = os.getenv('PROD_HOST_NAME', None)
@@ -43,7 +43,7 @@ if PROD_HOST_NAME:
     ALLOWED_HOSTS.append(PROD_HOST_NAME)
     CSRF_TRUSTED_ORIGINS.append(f'https://{PROD_HOST_NAME}')
 
-GOOGLE_CALLBACK_URL = 'http://127.0.0.1'
+GOOGLE_CALLBACK_URL = 'http://localhost:5173'
 # Application definition
 
 INSTALLED_APPS = [
@@ -81,14 +81,14 @@ SOCIALACCOUNT_PROVIDERS = {
             "secret": os.getenv('GOOGLE_CLIENT_SECRET'),
             "key": "",
         },
-        "SCOPE": [
-            "profile",
-            "email",
-        ],
-        "AUTH_PARAMS": {
-            "access_type": "online",
+        'SCOPE': ['openid', 'email', 'profile'],
+        'AUTH_PARAMS': {
+            'access_type': 'offline',
         },
-        "VERIFIED_EMAIL": True,
+        'INIT_PARAMS': {
+            'prompt': 'consent',
+        },
+        # "VERIFIED_EMAIL": True,
     },
 }
 SOCIALACCOUNT_AUTO_SIGNUP = True
