@@ -106,10 +106,10 @@ class ProgressAPIView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
-        cache_key = "progress-" + str(request.user.id)
+        cache_key = "progress-user-" + str(request.user.id)
         data = cache.get(cache_key)
         if data is None:
-            progress = SavedWord.objects.all()
+            progress = SavedWord.objects.filter(user=request.user)
             serialized = ProgressSerializer(progress, many=True)
             data = serialized.data
             cache.set(cache_key, data, 60)
