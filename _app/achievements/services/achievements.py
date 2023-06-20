@@ -53,7 +53,8 @@ class Achievements:
             {
                 'id': 1,
                 'title': _('5_words'),
-                'achieved': calc_n_words(saved, 5)
+                'achieved': calc_n_words(saved, 5),
+                'percent': calc_words_percent(saved, 5)
             },
             {
                 'id': 2,
