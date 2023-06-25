@@ -1,12 +1,23 @@
 version: '3.5'
 
 services:
+  meilisearch:
+    image: getmeili/meilisearch:v1.2
+    depends_on:
+      - db
+      - django
+    networks:
+      - app_network
+    ports:
+      - "7700:7700"
+    volumes:
+      - ./meilisearch_data:/data.ms
   db:
     image: postgres:15.1
     volumes:
       - database_volume:/var/lib/postgresql/data
     networks:
-      - database_network
+      - app_network
     environment:
       - POSTGRES_USER
       - POSTGRES_PASSWORD
@@ -29,7 +40,7 @@ services:
     volumes:
       - ./_app:/usr/src/app
     networks:
-      - database_network
+      - app_network
       - redis_network
     ports:
       - "80:8000"
@@ -47,10 +58,12 @@ services:
       - S3_REGION
       - GOOGLE_CLIENT_ID
       - GOOGLE_CLIENT_SECRET
+      - MEILISEARCH_URL
+      - MEILISEARCH_KEY
 
 volumes:
   database_volume:
 
 networks:
-  database_network:
+  app_network:
   redis_network:
