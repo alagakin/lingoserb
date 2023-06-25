@@ -22,5 +22,6 @@ urlpatterns = [
          name='complete-lesson'),
     path('learning/graph/', GetGraphAPIView.as_view(),
          name='graph'),
+    path('learning/skipped/ids/', SkipWordAPIView.as_view())
 
 ]

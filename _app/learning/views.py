@@ -24,7 +24,9 @@ from learning.serializers import (
 
 from django.db.models import Q
 import logging
+
 logger = logging.getLogger('openai')
+
 
 class SavedWordListAPIView(generics.ListAPIView):
     serializer_class = SavedWordListSerializer
@@ -137,6 +139,7 @@ class WatchedWordAPIView(APIView):
 class SkipWordAPIView(APIView):
     permission_classes = (IsAuthenticated,)
 
+    # skipping word
     def post(self, request, *args, **kwargs):
         try:
             saved_word = SavedWord.objects.get(
@@ -151,6 +154,17 @@ class SkipWordAPIView(APIView):
                 saved_word.skipped = True
                 saved_word.save()
                 return Response(True, status=status.HTTP_204_NO_CONTENT)
+
+        except SavedWord.DoesNotExist:
+            return Response(None, status=status.HTTP_404_NOT_FOUND)
+
+    # getting ids of skipped words
+    def get(self, request, *args, **kwargs):
+        try:
+            ids = SavedWord.objects.filter(user=request.user,
+                                           skipped=True).values_list(
+                'word__id', flat=True)
+            return Response(ids, status=status.HTTP_200_OK)
 
         except SavedWord.DoesNotExist:
             return Response(None, status=status.HTTP_404_NOT_FOUND)
