@@ -4,6 +4,7 @@ from accounts.views import ProfileView, GoogleLogin
 from learn_serbian.views import get_csrf_token
 
 urlpatterns = [
+    path('auth/', include('djoser.urls')),
     re_path(r'^auth/', include('djoser.urls.authtoken')),
     path('auth/google/', GoogleLogin.as_view(), name='google_login'),
     path('acconunts/profile/', ProfileView.as_view(),

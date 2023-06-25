@@ -303,3 +303,11 @@ REPETITIONS_TO_COMPLETE = 5
 
 MEILISEARCH_URL = os.getenv('MEILISEARCH_URL')
 MEILISEARCH_KEY = os.getenv('MEILISEARCH_KEY')
+
+
+DJOSER = {
+    'SEND_ACTIVATION_EMAIL': False,
+    'SERIALIZERS': {
+        'user_create': 'accounts.serializers.CustomUserCreateSerializer',
+    },
+}

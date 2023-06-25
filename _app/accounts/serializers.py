@@ -1,6 +1,23 @@
 from django.contrib.auth import get_user_model
 from django.contrib.sites.shortcuts import get_current_site
 from rest_framework import serializers
+from djoser.serializers import UserCreateSerializer
+
+
+class CustomUserCreateSerializer(UserCreateSerializer):
+    email = serializers.EmailField(required=True)  # Add this line
+
+    def perform_create(self, serializer):
+        email = serializer.get('email')
+        if email and self.user_exists(email):
+            raise serializers.ValidationError({'email': ['Email address is already in use.']})
+        return super().perform_create(serializer)
+
+    def user_exists(self, email):
+        return get_user_model().objects.filter(email=email).exists()
+
+    class Meta(UserCreateSerializer.Meta):
+        fields = ('email', 'username', 'password')
 
 
 class ProfileSerializer(serializers.ModelSerializer):
