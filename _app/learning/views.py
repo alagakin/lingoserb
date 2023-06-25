@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.core.cache import cache
 from django.db import IntegrityError
 from django.utils import timezone
 from rest_framework import status, generics
@@ -49,7 +48,7 @@ class SavedWordListAPIView(generics.ListAPIView):
             repetitions = [int(learned) / 100 * 5 for learned in progress]
             queryset = queryset.filter(repetition_count__in=repetitions)
 
-        queryset = queryset.order_by('-repetition_count')
+        queryset = queryset.order_by('skipped', '-repetition_count')
 
         return queryset
 
