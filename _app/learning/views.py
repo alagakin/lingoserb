@@ -207,8 +207,17 @@ class LearnTopicAPIView(APIView):
             already_saved_words_ids = self.get_already_saved_words_ids(topic,
                                                                        request.user)
 
+            excluded_words = SavedWord.objects.filter(
+                user=request.user,
+                word__topics__exact=topic,
+                skipped__exact=True
+            )
+            excluded_words_ids = excluded_words.values_list('word__id',
+                                                            flat=True)
             yet_not_saved_words = Word.objects.filter(
                 topics__exact=topic,
+            ).exclude(
+                id__in=excluded_words_ids
             ).exclude(
                 id__in=already_saved_words_ids
             )
@@ -230,7 +239,8 @@ class LearnTopicAPIView(APIView):
 
     def get_already_saved_words_ids(self, topic, user):
         saved_words = SavedWord.objects.filter(user=user,
-                                               word__topics__exact=topic)
+                                               word__topics__exact=topic,
+                                               skipped=False)
 
         return [saved_word.word.id for saved_word in saved_words]
 
