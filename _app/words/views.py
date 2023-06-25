@@ -1,3 +1,9 @@
+import json
+
+import meilisearch.errors
+
+from django.conf import settings
+from meilisearch import Client
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -35,23 +41,54 @@ class WordDetailAPIView(APIView):
         return Response(serialized.data, status=status.HTTP_200_OK)
 
 
-class WordsListAPIView(generics.ListAPIView):
+class WordsSearchAPIView(APIView):
     serializer_class = WordTranslationSerializer
-    queryset = Word.objects.all()
     permission_classes = (IsAuthenticated,)
 
-    def get_serializer_context(self):
-        context = super().get_serializer_context()
-        context['request'] = self.request
-        return context
+    def get_all_words(self, request):
+        words = Word.objects.all()
 
-    def get_queryset(self):
-        queryset = Word.objects.all()
-
-        topic_ids = self.request.query_params.getlist('topics')
-
+        topic_ids = request.query_params.getlist('topics')
         if topic_ids and topic_ids[0] != '':
             topic_ids = topic_ids[0].split(',')
-            queryset = queryset.filter(topics__in=topic_ids)
+            words = words.filter(topics__in=topic_ids)
 
-        return queryset
+        offset = int(request.query_params.get('offset', 0))
+        limit = int(request.query_params.get('limit', 10))
+        words = words[offset:offset + limit]
+
+        serialized = WordTranslationSerializer(words, many=True,
+                                               context={'request': request})
+
+        return Response(serialized.data, status=status.HTTP_200_OK)
+
+    def get(self, request, *args, **kwargs):
+        query = request.query_params.get('query', None)
+        try:
+            if not query:
+                return self.get_all_words(request)
+
+            limit = int(request.query_params.get('limit', 10))
+            offset = int(request.query_params.get('offset', 0))
+
+            client = Client(settings.MEILISEARCH_URL, settings.MEILISEARCH_KEY)
+            index = client.index('words')
+            search_results = index.search(query, {'limit': limit, 'offset': offset})
+
+            ids = [int(result['id']) for result in search_results['hits']]
+
+            words = Word.objects.filter(pk__in=ids)
+
+            topic_ids = request.query_params.getlist('topics')
+            if topic_ids and topic_ids[0] != '':
+                topic_ids = topic_ids[0].split(',')
+                words = words.filter(topics__in=topic_ids)
+
+            serialized = WordTranslationSerializer(words, many=True, context={'request': request})
+
+            return Response(serialized.data, status=status.HTTP_200_OK)
+
+        except meilisearch.errors.MeilisearchError as e:
+            return Response({
+                'error': e,
+            }, status=status.HTTP_400_BAD_REQUEST)

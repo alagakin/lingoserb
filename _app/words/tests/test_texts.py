@@ -4,15 +4,11 @@ from django.urls import resolve, reverse
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from words.models import Word, Text
-from words.views import WordsListAPIView, WordDetailAPIView, TextForWordAPIView
+from words.views import WordDetailAPIView, TextForWordAPIView
 from rest_framework.test import APITestCase
 
 
 class TestEndpointsResoled(TestCase):
-    def test_word_list_resolved(self):
-        url = reverse('word-list')
-        self.assertEqual(resolve(url).func.view_class, WordsListAPIView)
-
     def test_word_detail_resolved(self):
         url = reverse('word-detail', kwargs={'pk': 1})
         self.assertEqual(resolve(url).func.view_class, WordDetailAPIView)
@@ -40,11 +36,6 @@ class TestWordsAPIViews(APITestCase):
             content='Text for Test word'
         )
         self.word_1.texts.add(self.text_word_1)
-
-    def test_user_can_get_words_list(self):
-        response = self.client.get(reverse('word-list'))
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertContains(response, 'Test word')
 
     def test_user_can_get_word_detail_info(self):
         response = self.client.get(
