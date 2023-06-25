@@ -9,3 +9,4 @@ _psql
 _app/static/
 _app/media/
 .idea
+meilisearch_data/

@@ -3,6 +3,7 @@ version: '3.5'
 services:
   meilisearch:
     image: getmeili/meilisearch:v1.2
+
     depends_on:
       - db
       - django
@@ -12,6 +13,8 @@ services:
       - "7700:7700"
     volumes:
       - ./meilisearch_data:/data.ms
+    environment:
+      - MEILI_DB_PATH=${MEILI_DB_PATH:-/data.ms}
   db:
     image: postgres:15.1
     volumes:
