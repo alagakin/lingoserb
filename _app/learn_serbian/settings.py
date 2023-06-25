@@ -257,6 +257,12 @@ LOGGING = {
             'filename': os.path.join(BASE_DIR, 'log/log.log'),
             "formatter": "verbose",
         },
+        "index_logger": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            'filename': os.path.join(BASE_DIR, 'log/index_log.log'),
+            "formatter": "verbose",
+        },
         "openai_report": {
             "level": "INFO",
             "class": "logging.FileHandler",
@@ -275,6 +281,9 @@ LOGGING = {
             'handlers': ['openai_error', 'openai_report'],
             'level': 1,
         },
+        'index_logger': {
+            'handlers': ['index_logger'],
+        },
         '': {
             'handlers': ['file'],
             'level': 'WARNING',
@@ -291,3 +300,6 @@ S3_REGION = os.getenv('S3_REGION')
 
 WORDS_PER_ITERATION = 6
 REPETITIONS_TO_COMPLETE = 5
+
+MEILISEARCH_URL = os.getenv('MEILISEARCH_URL')
+MEILISEARCH_KEY = os.getenv('MEILISEARCH_KEY')
