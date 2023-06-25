@@ -90,5 +90,5 @@ class WordsSearchAPIView(APIView):
 
         except meilisearch.errors.MeilisearchError as e:
             return Response({
-                'error': e,
+                'error': e.message,
             }, status=status.HTTP_400_BAD_REQUEST)
