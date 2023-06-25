@@ -156,9 +156,16 @@ class SkipWordAPIView(APIView):
                 return Response(True, status=status.HTTP_204_NO_CONTENT)
 
         except SavedWord.DoesNotExist:
-            return Response(None, status=status.HTTP_404_NOT_FOUND)
+            try:
+                word = Word.objects.get(id=kwargs["word_id"])
+                SavedWord(user=request.user,
+                          word=word,
+                          skipped=True).save()
+                return Response(True, status=status.HTTP_204_NO_CONTENT)
 
-    # getting ids of skipped words
+            except Word.DoesNotExist:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+
     def get(self, request, *args, **kwargs):
         try:
             ids = SavedWord.objects.filter(user=request.user,
