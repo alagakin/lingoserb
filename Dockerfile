@@ -1,5 +1,5 @@
 # Tweak the base image by installing pipenv and GNU gettext tools
-FROM python:3.10 as base
+FROM python:3.11 as base
 RUN pip install pipenv
 
 # Begin our actual build
