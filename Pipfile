@@ -25,6 +25,7 @@ django-allauth = "*"
 dj-rest-auth = {version = "*", extras = ["with_social"]}
 drf-yasg = "*"
 meilisearch = "*"
+aiohttp = "*"
 
 [dev-packages]
 black = "*"
