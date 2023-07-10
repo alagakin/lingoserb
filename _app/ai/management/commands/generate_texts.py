@@ -13,21 +13,27 @@ logger = logging.getLogger('openai')
 
 class Command(BaseCommand):
     help = "Imports base 3000 words with English and Russian translations"
-    prompt = """Your response for next prompt should only contain JSON string. 
-    For the following Serbian words make Serbian one or two sentences 
-    with it's usage: %s. 
+    prompt = """Your response for next prompt should only contain JSON string.
+    For the following Serbian words make Serbian one or two sentences
+    with it's usage: %s.
     Translate each text to Russian. Use this as example: {
         "sentences": [
         {
         "word": "Serbian word",
         "text": "text in Serbian",
-        "translation": "translation to Russian"
+        "translation_ru": "translation to Russian",
+        "translation_en": "translation to English"
         }, ]}"""
+
+    def add_arguments(self, parser):
+        parser.add_argument('--iter', type=int, help='How many?', default=10)
+        parser.add_argument('--words_per_iter', type=int, help='How many?', default=5)
+
 
     def handle(self, *args, **options):
         openai.api_key = os.getenv('OPENAI_KEY')
-        for i in range(0, 3):
-            words = Word.objects.order_by('-texts')[0:5]
+        for i in range(0, options['iter']):
+            words = Word.objects.order_by('-texts')[0:options['words_per_iter']]
 
             titles = ['"' + word.title + '"' for word in words]
             titles = ", ".join(titles)
@@ -47,10 +53,7 @@ class Command(BaseCommand):
                     try:
                         word = Word.objects.get(title=sentence['word'])
                     except Word.DoesNotExist:
-                        word = Word(
-                            title=sentence['word']
-                        )
-                        word.save()
+                        return
 
                     try:
                         text = Text.objects.get(content=sentence['text'])
@@ -61,18 +64,33 @@ class Command(BaseCommand):
                         text.save()
 
                     try:
-                        translation = TextTranslation.objects.get(
-                            content=sentence['translation'],
+                        TextTranslation.objects.get(
+                            content=sentence['translation_ru'],
                             lang='ru',
                             text=text
                         )
                     except TextTranslation.DoesNotExist:
                         translation = TextTranslation(
-                            content=sentence['translation'],
+                            content=sentence['translation_ru'],
                             lang='ru',
                             text=text
                         )
                         translation.save()
+
+                    try:
+                        TextTranslation.objects.get(
+                            content=sentence['translation_en'],
+                            lang='en',
+                            text=text
+                        )
+                    except TextTranslation.DoesNotExist:
+                        translation = TextTranslation(
+                            content=sentence['translation_en'],
+                            lang='en',
+                            text=text
+                        )
+                        translation.save()
+
                     if text not in word.texts.all():
                         word.texts.add(text)
 
