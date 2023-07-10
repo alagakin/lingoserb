@@ -14,12 +14,12 @@ logger = logging.getLogger('openai')
 
 class Command(BaseCommand):
     help = "Imports base 3000 words with English and Russian translations"
-    prompt = """Provide 30 Serbian words for topic '%s' with translation 
-        to Russian and English. Use singular for of nouns and infinitives for 
+    prompt = """Provide 30 Serbian words for topic '%s' with translation
+        to Russian and English. Use singular for of nouns and infinitives for
         verbs. Use JSON only, like this {
-    "Topic": [
+    "%s": [
         {
-            "serbian": "serbian word",
+            "serbian": "српска реч",
             "russian": "русское слово",
             "english": "english word"
         }, ]"""
@@ -29,7 +29,7 @@ class Command(BaseCommand):
         topic = Topic.objects.filter(parent_id__gt=0).order_by(
             '-words').first()
         topic_en = topic.translations.filter(lang='en').first().title
-        prompt = self.prompt % topic_en
+        prompt = self.prompt % (topic_en, topic_en)
 
         chat_completion = openai.ChatCompletion.create(
             model="gpt-3.5-turbo", messages=[
@@ -37,6 +37,7 @@ class Command(BaseCommand):
                  "content": prompt}]
         )
         result = chat_completion['choices'][0]['message']['content']
+        logger.info(result)
         result = json.loads(result)
         pairs = result[topic_en]
         logger.info(pairs)
