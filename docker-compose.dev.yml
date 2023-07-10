@@ -12,3 +12,5 @@ services:
     command: gunicorn learn_serbian.wsgi -c gunicorn.cfg.py --reload
     environment:
       - DEBUG=true
+    ports:
+      - "80:8000"

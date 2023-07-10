@@ -10,3 +10,4 @@ _app/static/
 _app/media/
 .idea
 meilisearch_data/
+db_data/

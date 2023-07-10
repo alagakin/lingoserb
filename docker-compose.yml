@@ -22,9 +22,9 @@ services:
       - MEILI_ENV=${MEILI_ENV:-development}
   db:
     restart: always
-    image: postgres:15.1
+    image: postgres:15.3
     volumes:
-      - database_volume:/var/lib/postgresql/data
+      - ./db_data:/var/lib/postgresql/data
     networks:
       - app_network
     environment:
@@ -53,26 +53,10 @@ services:
     networks:
       - app_network
       - redis_network
-    ports:
-      - "80:8000"
     env_file:
       - .env
     environment:
       - PYTHONUNBUFFERED=0
-      - DJANGO_SECRET_KEY
-      - POSTGRES_USER
-      - POSTGRES_PASSWORD
-      - MEDIA_ROOT
-      - MEDIA_URL
-      - OPENAI_KEY
-      - S3_ACCESS_KEY
-      - S3_SECRET_ACCESS_KEY
-      - S3_BUCKET_NAME
-      - S3_REGION
-      - GOOGLE_CLIENT_ID
-      - GOOGLE_CLIENT_SECRET
-      - MEILISEARCH_URL
-      - MEILI_MASTER_KEY
 
 volumes:
   database_volume:
