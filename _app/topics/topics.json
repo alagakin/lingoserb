@@ -1,8 +1,8 @@
 [
   {
-    "title": "Hrana",
-    "title_ru": "Пища",
-    "title_en": "Food",
+    "title": "Hrana i piće",
+    "title_ru": "Еда и напитки",
+    "title_en": "Food and Drinks",
     "subtopics": [
       {
         "title": "Voće",
@@ -13,6 +13,41 @@
         "title": "Povrće",
         "title_ru": "Овощи",
         "title_en": "Vegetables"
+      },
+      {
+        "title": "Piće",
+        "title_ru": "Напитки",
+        "title_en": "Drinks"
+      },
+      {
+        "title": "Kuvanje",
+        "title_ru": "Готовка",
+        "title_en": "Cooking"
+      },
+      {
+        "title": "Restoran",
+        "title_ru": "Ресторан",
+        "title_en": "Restaurant"
+      },
+      {
+        "title": "Slastice",
+        "title_ru": "Сладости",
+        "title_en": "Sweets"
+      },
+      {
+        "title": "Doručak",
+        "title_ru": "Завтрак",
+        "title_en": "Breakfast"
+      },
+      {
+        "title": "Ručak",
+        "title_ru": "Обед",
+        "title_en": "Lunch"
+      },
+      {
+        "title": "Večera",
+        "title_ru": "Ужин",
+        "title_en": "Dinner"
       }
     ]
   },
@@ -27,14 +62,19 @@
         "title_en": "Health"
       },
       {
-        "title": "Telo",
-        "title_ru": "Тело",
-        "title_en": "Body"
-      },
-      {
         "title": "Delovi tela",
         "title_ru": "Части тела",
         "title_en": "Body Parts"
+      },
+      {
+        "title": "Sport",
+        "title_ru": "Спорт",
+        "title_en": "Sport"
+      },
+      {
+        "title": "Kod lekara",
+        "title_ru": "У врача",
+        "title_en": "At the doctor's"
       }
     ]
   },
