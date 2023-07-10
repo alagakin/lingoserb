@@ -10,7 +10,7 @@ logger = logging.getLogger('index_logger')
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
-        client = Client(settings.MEILISEARCH_URL, settings.MEILISEARCH_KEY)
+        client = Client(settings.MEILISEARCH_URL, settings.MEILI_MASTER_KEY)
 
         words = Word.objects.all()
         indexed_words = []

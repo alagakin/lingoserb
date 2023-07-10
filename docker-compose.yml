@@ -2,8 +2,8 @@ version: '3.5'
 
 services:
   meilisearch:
+    restart: always
     image: getmeili/meilisearch:v1.2
-
     depends_on:
       - db
       - django
@@ -13,9 +13,15 @@ services:
       - "7700:7700"
     volumes:
       - ./meilisearch_data:/data.ms
+    env_file:
+      - .env
     environment:
       - MEILI_DB_PATH=${MEILI_DB_PATH:-/data.ms}
+      - MEILI_MASTER_KEY=${MEILI_MASTER_KEY:-masterKey}
+      - MEILI_NO_ANALYTICS=${MEILI_NO_ANALYTICS:-true}
+      - MEILI_ENV=${MEILI_ENV:-development}
   db:
+    restart: always
     image: postgres:15.1
     volumes:
       - database_volume:/var/lib/postgresql/data
@@ -26,11 +32,13 @@ services:
       - POSTGRES_PASSWORD
 
   redis:
+    restart: always
     image: redis:7.0.8
     networks:
       - redis_network
 
   django:
+    restart: always
     build:
       context: .
       dockerfile: Dockerfile
@@ -47,6 +55,8 @@ services:
       - redis_network
     ports:
       - "80:8000"
+    env_file:
+      - .env
     environment:
       - PYTHONUNBUFFERED=0
       - DJANGO_SECRET_KEY
@@ -62,7 +72,7 @@ services:
       - GOOGLE_CLIENT_ID
       - GOOGLE_CLIENT_SECRET
       - MEILISEARCH_URL
-      - MEILISEARCH_KEY
+      - MEILI_MASTER_KEY
 
 volumes:
   database_volume:

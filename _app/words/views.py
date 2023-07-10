@@ -71,7 +71,7 @@ class WordsSearchAPIView(APIView):
             limit = int(request.query_params.get('limit', 10))
             offset = int(request.query_params.get('offset', 0))
 
-            client = Client(settings.MEILISEARCH_URL, settings.MEILISEARCH_KEY)
+            client = Client(settings.MEILISEARCH_URL, settings.MEILI_MASTER_KEY)
             index = client.index('words')
             search_results = index.search(query, {'limit': limit, 'offset': offset})
 
