@@ -35,15 +35,20 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 DEBUG = os.getenv('DEBUG', False) == 'true'
 
 # Enable traffic and form submissions from localhost and PROD_HOST_NAME
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '127.0.0.1:5173']
-CSRF_TRUSTED_ORIGINS = ['http://localhost']
+
 
 PROD_HOST_NAME = os.getenv('PROD_HOST_NAME', None)
-if PROD_HOST_NAME:
-    ALLOWED_HOSTS.append(PROD_HOST_NAME)
-    CSRF_TRUSTED_ORIGINS.append(f'https://{PROD_HOST_NAME}')
+FRONTEND_HOST = os.getenv('FRONTEND_HOST')
 
-GOOGLE_CALLBACK_URL = 'http://localhost:5173'
+ALLOWED_HOSTS = [
+    PROD_HOST_NAME
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    f'https://{FRONTEND_HOST}'
+]
+
+GOOGLE_CALLBACK_URL = f'https://{FRONTEND_HOST}'
 # Application definition
 
 INSTALLED_APPS = [
