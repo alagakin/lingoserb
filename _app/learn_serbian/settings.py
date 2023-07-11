@@ -274,19 +274,21 @@ LOGGING = {
             "class": "logging.FileHandler",
             'filename': os.path.join(BASE_DIR, 'log/openai_error.log'),
             "formatter": "verbose",
-        },
+        }
     },
     "loggers": {
         'openai': {
             'handlers': ['openai_error', 'openai_report'],
             'level': 1,
+            'propagate': False,
         },
         'index_logger': {
             'handlers': ['index_logger'],
+            'propagate': False,
         },
         '': {
             'handlers': ['file'],
-            'level': 'WARNING',
+            'level': 'INFO',
             'propagate': True,
         },
     },
