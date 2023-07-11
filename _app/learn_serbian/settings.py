@@ -45,10 +45,13 @@ ALLOWED_HOSTS = [
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    f'https://{FRONTEND_HOST}'
+    FRONTEND_HOST,
+    PROD_HOST_NAME,
 ]
-
-GOOGLE_CALLBACK_URL = f'https://{FRONTEND_HOST}'
+if not DEBUG:
+    GOOGLE_CALLBACK_URL = f'https://{FRONTEND_HOST}'
+else:
+    GOOGLE_CALLBACK_URL = f'http://{FRONTEND_HOST}'
 # Application definition
 
 INSTALLED_APPS = [
