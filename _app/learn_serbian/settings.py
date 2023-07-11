@@ -44,10 +44,17 @@ ALLOWED_HOSTS = [
     PROD_HOST_NAME
 ]
 
-CSRF_TRUSTED_ORIGINS = [
-    FRONTEND_HOST,
-    PROD_HOST_NAME,
-]
+if DEBUG:
+    CSRF_TRUSTED_ORIGINS = [
+        FRONTEND_HOST,
+        PROD_HOST_NAME,
+    ]
+else:
+    CSRF_TRUSTED_ORIGINS = [
+        f'https://{FRONTEND_HOST}',
+        f'https://{PROD_HOST_NAME}',
+    ]
+
 if not DEBUG:
     GOOGLE_CALLBACK_URL = f'https://{FRONTEND_HOST}'
 else:
