@@ -6,5 +6,9 @@ route {
     root /usr/share/caddy
   }
 
+  file_server /media/* {
+      root /usr/share/caddy
+  }
+
   reverse_proxy django:8000
 }

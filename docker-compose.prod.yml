@@ -8,6 +8,8 @@ services:
     volumes:
       - ./_app:/usr/src/app
       - static_files_volume:/usr/src/app/static
+      - media_files_volume:/usr/src/app/media
+
     environment:
       - PROD_HOST_NAME
   caddy:
@@ -20,6 +22,7 @@ services:
     volumes:
       - $PWD/_caddy/Caddyfile:/etc/caddy/Caddyfile
       - static_files_volume:/usr/share/caddy/static
+      - media_files_volume:/usr/share/caddy/media
       - caddy_data:/data
       - caddy_config:/config
     networks:
@@ -33,5 +36,6 @@ networks:
 # Enable these if you decide to use the `caddy` service
 volumes:
   static_files_volume:
+  media_files_volume:
   caddy_data:
   caddy_config:
