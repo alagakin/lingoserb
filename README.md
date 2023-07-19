@@ -1,5 +1,7 @@
-# 🇷🇸 LingoSerb (backend)
+# 🇷🇸 LingoSerb
 #### This is the backend part of LingoSerb project.
+
+[Frontend Repo](https://github.com/alagakin/lingoserb-frontend)
 
 The idea of writing something like LingoSerb came to me when I found out that there is few resources which can provide most used Serbian words and use context. Moreover, online translators tend to provide inaccurate information.
 
