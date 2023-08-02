@@ -193,7 +193,9 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATIC_ROOT = 'static'
 # See http://whitenoise.evans.io/en/latest/django.html#enable-whitenoise
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STORAGES = {
+    'default': "whitenoise.storage.CompressedManifestStaticFilesStorage"
+}
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
@@ -314,13 +316,11 @@ S3_SECRET_ACCESS_KEY = os.getenv('S3_SECRET_ACCESS_KEY')
 S3_BUCKET_NAME = os.getenv('S3_BUCKET_NAME')
 S3_REGION = os.getenv('S3_REGION')
 
-
 WORDS_PER_ITERATION = 6
 REPETITIONS_TO_COMPLETE = 5
 
 MEILISEARCH_URL = os.getenv('MEILISEARCH_URL')
 MEILI_MASTER_KEY = os.getenv('MEILI_MASTER_KEY')
-
 
 DJOSER = {
     'SEND_ACTIVATION_EMAIL': False,
