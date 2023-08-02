@@ -194,7 +194,9 @@ STATIC_URL = 'static/'
 STATIC_ROOT = 'static'
 # See http://whitenoise.evans.io/en/latest/django.html#enable-whitenoise
 STORAGES = {
-    'default': "whitenoise.storage.CompressedManifestStaticFilesStorage"
+    'staticfiles': {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"
+    }
 }
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
