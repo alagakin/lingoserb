@@ -196,6 +196,9 @@ STATIC_ROOT = 'static'
 STORAGES = {
     'staticfiles': {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"
+    },
+    'default': {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"
     }
 }
 # Default primary key field type
