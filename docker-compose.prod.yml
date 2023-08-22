@@ -12,21 +12,19 @@ services:
 
     environment:
       - PROD_HOST_NAME
-  caddy:
-    image: caddy:2.6.2-alpine
+  nginx:
+    image: nginx:latest
     restart: unless-stopped
     ports:
       - "51001:80"
     volumes:
-      - $PWD/_caddy/Caddyfile:/etc/caddy/Caddyfile
-      - static_files_volume:/usr/share/caddy/static
-      - media_files_volume:/usr/share/caddy/media
-      - caddy_data:/data
-      - caddy_config:/config
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - static_files_volume:/usr/share/nginx/html/static
+      - media_files_volume:/usr/share/nginx/html/media
     networks:
       - lsb_hosting_network
-    environment:
-      - PROD_HOST_NAME
+    depends_on:
+      - django
 
 networks:
   lsb_hosting_network:
