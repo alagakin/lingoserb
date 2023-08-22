@@ -191,15 +191,19 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
-STATIC_ROOT = 'static'
+STATIC_ROOT = BASE_DIR / 'static'
 # See http://whitenoise.evans.io/en/latest/django.html#enable-whitenoise
 STORAGES = {
     'staticfiles': {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"
     },
     'default': {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"
-    }
+        'BACKEND': 'django.core.files.storage.FileSystemStorage',
+        "OPTIONS": {
+            "location": BASE_DIR / "media",
+            "base_url": "/media/",
+        },
+    },
 }
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
