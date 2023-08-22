@@ -1,4 +1,4 @@
-{$PROD_HOST_NAME}
+http://localhost
 
 route {
   file_server /static/* {

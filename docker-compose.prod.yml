@@ -17,8 +17,6 @@ services:
     restart: unless-stopped
     ports:
       - "51001:80"
-      - "51002:443"
-      - "51002:443/udp"
     volumes:
       - $PWD/_caddy/Caddyfile:/etc/caddy/Caddyfile
       - static_files_volume:/usr/share/caddy/static
