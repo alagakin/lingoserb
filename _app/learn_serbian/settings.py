@@ -41,7 +41,8 @@ PROD_HOST_NAME = os.getenv('PROD_HOST_NAME', None)
 FRONTEND_HOST = os.getenv('FRONTEND_HOST')
 
 ALLOWED_HOSTS = [
-    PROD_HOST_NAME
+    PROD_HOST_NAME,
+    'localhost'
 ]
 
 if DEBUG:
