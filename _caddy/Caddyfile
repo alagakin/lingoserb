@@ -10,5 +10,5 @@ route {
       root /usr/share/caddy
   }
 
-  reverse_proxy django:8000
+  reverse_proxy django:51001
 }

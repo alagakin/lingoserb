@@ -10,7 +10,7 @@ services:
     networks:
       - app_network
     ports:
-      - "7700:7700"
+      - "51003:7700"
     volumes:
       - ./meilisearch_data:/data.ms
     env_file:

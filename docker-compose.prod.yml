@@ -4,7 +4,7 @@ version: '3.5'
 services:
   django:
     networks:
-      - hosting_network
+      - lsb_hosting_network
     volumes:
       - ./_app:/usr/src/app
       - static_files_volume:/usr/src/app/static
@@ -16,9 +16,9 @@ services:
     image: caddy:2.6.2-alpine
     restart: unless-stopped
     ports:
-      - "80:80"
-      - "443:443"
-      - "443:443/udp"
+      - "51001:80"
+      - "51002:443"
+      - "51002:443/udp"
     volumes:
       - $PWD/_caddy/Caddyfile:/etc/caddy/Caddyfile
       - static_files_volume:/usr/share/caddy/static
@@ -26,12 +26,12 @@ services:
       - caddy_data:/data
       - caddy_config:/config
     networks:
-      - hosting_network
+      - lsb_hosting_network
     environment:
       - PROD_HOST_NAME
 
 networks:
-  hosting_network:
+  lsb_hosting_network:
 
 # Enable these if you decide to use the `caddy` service
 volumes:
